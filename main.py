@@ -1,7 +1,7 @@
 import gensim
 from gensim.models import Word2Vec
 
-SPECIAL_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/\'"
+BANNED_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/123456789\'"
 EMPTY_WORD = "___________"
 
 model = gensim.models.KeyedVectors.load_word2vec_format('venv/data/GoogleNews-vectors-negative300.bin', binary=True)
@@ -27,16 +27,16 @@ def dictionaries(word_list):
     # Populate word lists
     for word in word_list:
         if len(word) == 11:
-            if all(c not in SPECIAL_CHARACTERS for c in word):
+            if all(c not in BANNED_CHARACTERS for c in word):
                 eleven_char_words.append(word)
         if len(word) == 10:
-            if all(c not in SPECIAL_CHARACTERS for c in word):
+            if all(c not in BANNED_CHARACTERS for c in word):
                 ten_char_words.append(word)
         if len(word) == 6:
-            if all(c not in SPECIAL_CHARACTERS for c in word):
+            if all(c not in BANNED_CHARACTERS for c in word):
                 six_char_words.append(word)
         if len(word) == 4:
-            if all(c not in SPECIAL_CHARACTERS for c in word):
+            if all(c not in BANNED_CHARACTERS for c in word):
                 four_char_words.append(word)
 
     # print("Eleven character words: " + eleven_char_words[0])
