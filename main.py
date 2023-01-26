@@ -1,19 +1,24 @@
 import gensim
 from gensim.models import Word2Vec
 from statemachine import StateMachine, State
+import requests
 
 BANNED_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/123456789\'"
 EMPTY_WORD = "___________"
 
-model = gensim.models.KeyedVectors.load_word2vec_format('venv/data/GoogleNews-vectors-negative300.bin', binary=True)
+# model = gensim.models.KeyedVectors.load_word2vec_format('venv/data/GoogleNews-vectors-negative300.bin', binary=True)
 
 
 def word2vec(user_words: list[str]):
     # print(model.most_similar(positive=words, topn=5000))
 
-    sim_list = model.most_similar(positive=user_words, topn=100000)
+    # sim_list = model.most_similar(positive=user_words, topn=100000)
 
-    word_list = [i[0] for i in sim_list]
+    sim_list = requests.get('http://744f-109-255-34-132.ngrok.io/request/?user_words=' + words)
+
+    word_list = [i[0] for i in sim_list.json()]
+
+    # print(word_list)
 
     dictionaries(word_list)
 
