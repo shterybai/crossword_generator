@@ -1,6 +1,6 @@
 import gensim
 from gensim.models import Word2Vec
-from statemachine import StateMachine, State
+# from statemachine import StateMachine, State
 import requests
 import time
 
@@ -12,7 +12,7 @@ EMPTY_WORD = "___________"
 
 def word2vec(user_words: list[str]):
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://0dc5-109-255-34-132.ngrok.io/request/?user_words=' + words)
+    sim_list = requests.get('http://8b0f-109-255-34-132.ngrok.io/request/?user_words=' + words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -75,7 +75,7 @@ def insertions(eleven_char_words, ten_char_words, six_char_words, four_char_word
     a6 = a6_insertion(a6_banned, d1, d2, four_char_words)
     a9 = a9_insertion(a9_banned, d10, d2, four_char_words)
     a11 = a11_insertion(a11_banned, d11, d5, four_char_words)
-    d13 = d13_insertion(d13_banned, a12, four_char_words)
+    d13 = d13_insertion(d13_banned, a12, a15, four_char_words)
     d14 = d14_insertion(d14_banned, a12, four_char_words)
     a16 = a16_insertion(a16_banned, d11, d14, four_char_words)
 
@@ -234,17 +234,17 @@ def a9_insertion(a9_banned, d10, d2, four_char_words):
 def a11_insertion(a11_banned, d11, d5, four_char_words):
     print(time.time() - start_time, "seconds: A11 assignment")
     for word in four_char_words:
-        if word[0] == d11[0] and word[1] == d5[5] and word not in a11_banned:
+        if word[0] == d11[0] and word[2] == d5[5] and word not in a11_banned:
             a11 = word
             return a11
     return EMPTY_WORD
 
 
 # D13 assignment
-def d13_insertion(d13_banned, a12, four_char_words):
+def d13_insertion(d13_banned, a12, a15, four_char_words):
     print(time.time() - start_time, "seconds: D13 assignment")
     for word in four_char_words:
-        if word[0] == a12[3] and word not in d13_banned:
+        if word[0] == a12[3] and word[0] == a15[3] and word not in d13_banned:
             d13 = word
             return d13
     return EMPTY_WORD
