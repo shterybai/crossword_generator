@@ -6,6 +6,12 @@ import requests
 BANNED_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/123456789\'"
 EMPTY_WORD = "___________"
 
+# Word list initialization
+eleven_char_words = []
+ten_char_words = []
+six_char_words = []
+four_char_words = []
+
 # model = gensim.models.KeyedVectors.load_word2vec_format('venv/data/GoogleNews-vectors-negative300.bin', binary=True)
 
 
@@ -24,11 +30,6 @@ def word2vec(user_words: list[str]):
 
 
 def dictionaries(word_list):
-    # Word list initialization
-    eleven_char_words = []
-    ten_char_words = []
-    six_char_words = []
-    four_char_words = []
 
     # Populate word lists
     for word in word_list:
@@ -52,180 +53,186 @@ def dictionaries(word_list):
 
     # insertions(eleven_char_words, ten_char_words, six_char_words, four_char_words)
 
-
-class StateMachine:
+# D3 assignment
+class D3Insertion(eleven_char_words):
     def __init__(self):
-        self.handlers = {}
-        self.startState = None
-        self.endStates = []
+        self.banned_words = []
+        self.name = "d3"
+        self.word = ""
+        self.next_state = "a8"
 
-    def add_state(self, name, handler, end_state=0):
-        name = name.upper()
-        self.handlers[name] = handler
-        if end_state:
-            self.endStates.append(name)
+    def set_word(self, word):
+        self.word = word
+        return self.next_state
 
-    def set_start(self, name):
-        self.startState = name.upper()
+    def ban_word(self, word):
+        self.banned_words.append(word)
 
-    def run(self):
-        # try:
-        handler = self.handlers[self.startState]
-        # except:
-        #     raise InitializationError("must call .set_start() before .run()")
-        # if not self.endStates:
-        #     raise InitializationError("at least one state must be an end_state")
+    def is_valid(self, word):
+        if word not in self.banned_words:
+            self.set_word(word)
+        else:
+            self.if_failed()
 
-        while True:
-            (newState) = handler()
-            if newState.upper() in self.endStates:
-                print("reached ", newState)
-                break
-            else:
-                handler = self.handlers[newState.upper()]
+    def if_failed(self):
+        return False
+
+# A8 assignment
+class A8Insertion(ten_char_words):
+    def __init__(self):
+        self.banned_words = []
+        self.name = "a8"
+        self.word = ""
+        self.next_state = "a12"
+        self.backtrack_state = "d3"
+
+    def set_word(self, word):
+        self.word = word
+        return self.next_state
+
+    def ban_word(self, word):
+        self.banned_words.append(word)
+
+    def is_valid(self, word):
+        if word[4] == d3[3] and word not in a8_banned:
+            self.set_word(word)
+        else:
+            self.if_failed()
+
+    def if_failed(self):
+        return self.backtrack_state
 
 
+    for word in ten_char_words:
+        if word[4] == d3[3] and word not in a8_banned:
+            a8 = word
+            newState = "a12_insertion"
+            break
+    if a8 == EMPTY_WORD:
+        newState = "d3_insertion"
+    return (newState)
 
-    # D3 assignment
-    def d3_insertion(d3_banned, eleven_char_words):
-        for word in eleven_char_words:
-            if word not in d3_banned:
-                d3 = word
-                newState = "a8_insertion"
-                return (newState)
-
-    # A8 assignment
-    def a8_insertion(a8_banned, d3, ten_char_words):
-        for word in ten_char_words:
-            if word[4] == d3[3] and word not in a8_banned:
-                a8 = word
-                newState = "a12_insertion"
-                break
-        if a8 == EMPTY_WORD:
+# A12 assignment
+def a12_insertion(a12_banned, d3, ten_char_words):
+    for word in ten_char_words:
+        if word[5] == d3[7] and word not in a12_banned:
+            a12 = word
+            newState = "d2_insertion"
+        else:
             newState = "d3_insertion"
-        return (newState)
+    return (newState, a12)
 
-    # A12 assignment
-    def a12_insertion(a12_banned, d3, ten_char_words):
-        for word in ten_char_words:
-            if word[5] == d3[7] and word not in a12_banned:
-                a12 = word
-                newState = "d2_insertion"
-            else:
-                newState = "d3_insertion"
-        return (newState, a12)
+# D2 assignment
+def d2_insertion(d2_banned, a8, six_char_words):
+    for word in six_char_words:
+        if word[3] == a8[2] and word not in d2_banned:
+            d2 = word
+            return d2
+    return EMPTY_WORD
 
-    # D2 assignment
-    def d2_insertion(d2_banned, a8, six_char_words):
-        for word in six_char_words:
-            if word[3] == a8[2] and word not in d2_banned:
-                d2 = word
-                return d2
-        return EMPTY_WORD
+# D5 assignment
+def d5_insertion(d5_banned, a8, six_char_words):
+    for word in six_char_words:
+        if word[3] == a8[8] and word not in d5_banned:
+            d5 = word
+            return d5
+    return EMPTY_WORD
 
-    # D5 assignment
-    def d5_insertion(d5_banned, a8, six_char_words):
-        for word in six_char_words:
-            if word[3] == a8[8] and word not in d5_banned:
-                d5 = word
-                return d5
-        return EMPTY_WORD
+# D10 assignment
+def d10_insertion(d10_banned, a12, six_char_words):
+    for word in six_char_words:
+        if word[2] == a12[1] and word not in d10_banned:
+            d10 = word
+            return d10
+    return EMPTY_WORD
 
-    # D10 assignment
-    def d10_insertion(d10_banned, a12, six_char_words):
-        for word in six_char_words:
-            if word[2] == a12[1] and word not in d10_banned:
-                d10 = word
-                return d10
-        return EMPTY_WORD
+# D11 assignment
+def d11_insertion(d11_banned, a12, six_char_words):
+    for word in six_char_words:
+        if word[2] == a12[7] and word not in d11_banned:
+            d11 = word
+            return d11
+    return EMPTY_WORD
 
-    # D11 assignment
-    def d11_insertion(d11_banned, a12, six_char_words):
-        for word in six_char_words:
-            if word[2] == a12[7] and word not in d11_banned:
-                d11 = word
-                return d11
-        return EMPTY_WORD
+# A7 assignment
+def a7_insertion(a7_banned, d3, six_char_words):
+    for word in six_char_words:
+        if word[0] == d3[1] and word[5] == d3[9] and word not in a7_banned:
+            a7 = word
+            return a7
+    return EMPTY_WORD
 
-    # A7 assignment
-    def a7_insertion(a7_banned, d3, six_char_words):
-        for word in six_char_words:
-            if word[0] == d3[1] and word[5] == d3[9] and word not in a7_banned:
-                a7 = word
-                return a7
-        return EMPTY_WORD
+# A15 assignment
+def a15_insertion(a15_banned, d10, d3, six_char_words):
+    for word in six_char_words:
+        if word[1] == d10[4] and word[5] == d3[9] and word not in a15_banned:
+            a15 = word
+            return a15
+    return EMPTY_WORD
 
-    # A15 assignment
-    def a15_insertion(a15_banned, d10, d3, six_char_words):
-        for word in six_char_words:
-            if word[1] == d10[4] and word[5] == d3[9] and word not in a15_banned:
-                a15 = word
-                return a15
-        return EMPTY_WORD
+# D1 assignment
+def d1_insertion(d1_banned, a8, four_char_words):
+    for word in four_char_words:
+        if word[3] == a8[0] and word not in d1_banned:
+            d1 = word
+            return d1
+    return EMPTY_WORD
 
-    # D1 assignment
-    def d1_insertion(d1_banned, a8, four_char_words):
-        for word in four_char_words:
-            if word[3] == a8[0] and word not in d1_banned:
-                d1 = word
-                return d1
-        return EMPTY_WORD
+# D4 assignment
+def d4_insertion(d4_banned, a7, a8, four_char_words):
+    for word in four_char_words:
+        if word[1] == a7[2] and word[3] == a8[6] and word not in d4_banned:
+            d4 = word
+            return d4
+    return EMPTY_WORD
 
-    # D4 assignment
-    def d4_insertion(d4_banned, a7, a8, four_char_words):
-        for word in four_char_words:
-            if word[1] == a7[2] and word[3] == a8[6] and word not in d4_banned:
-                d4 = word
-                return d4
-        return EMPTY_WORD
+# A6 assignment
+def a6_insertion(a6_banned, d1, d2, four_char_words):
+    for word in four_char_words:
+        if word[1] == d1[1] and word[3] == d2[1] and word not in a6_banned:
+            a6 = word
+            return a6
+    return EMPTY_WORD
 
-    # A6 assignment
-    def a6_insertion(a6_banned, d1, d2, four_char_words):
-        for word in four_char_words:
-            if word[1] == d1[1] and word[3] == d2[1] and word not in a6_banned:
-                a6 = word
-                return a6
-        return EMPTY_WORD
+# A9 assignment
+def a9_insertion(a9_banned, d10, d2, four_char_words):
+    for word in four_char_words:
+        if word[1] == d10[0] and word[3] == d2[5] and word not in a9_banned:
+            a9 = word
+            return a9
+    return EMPTY_WORD
 
-    # A9 assignment
-    def a9_insertion(a9_banned, d10, d2, four_char_words):
-        for word in four_char_words:
-            if word[1] == d10[0] and word[3] == d2[5] and word not in a9_banned:
-                a9 = word
-                return a9
-        return EMPTY_WORD
+# A11 assignment
+def a11_insertion(a11_banned, d11, d5, four_char_words):
+    for word in four_char_words:
+        if word[0] == d11[0] and word[1] == d5[5] and word not in a11_banned:
+            a11 = word
+            return a11
+    return EMPTY_WORD
 
-    # A11 assignment
-    def a11_insertion(a11_banned, d11, d5, four_char_words):
-        for word in four_char_words:
-            if word[0] == d11[0] and word[1] == d5[5] and word not in a11_banned:
-                a11 = word
-                return a11
-        return EMPTY_WORD
+# D13 assignment
+def d13_insertion(d13_banned, a12, four_char_words):
+    for word in four_char_words:
+        if word[0] == a12[3] and word not in d13_banned:
+            d13 = word
+            return d13
+    return EMPTY_WORD
 
-    # D13 assignment
-    def d13_insertion(d13_banned, a12, four_char_words):
-        for word in four_char_words:
-            if word[0] == a12[3] and word not in d13_banned:
-                d13 = word
-                return d13
-        return EMPTY_WORD
+# D14 assignment
+def d14_insertion(d14_banned, a12, four_char_words):
+    for word in four_char_words:
+        if word[0] == a12[9] and word not in d14_banned:
+            d14 = word
+            return d14
+    return EMPTY_WORD
 
-    # D14 assignment
-    def d14_insertion(d14_banned, a12, four_char_words):
-        for word in four_char_words:
-            if word[0] == a12[9] and word not in d14_banned:
-                d14 = word
-                return d14
-        return EMPTY_WORD
-
-    # A16 assignment
-    def a16_insertion(a16_banned, d11, d14, four_char_words):
-        for word in four_char_words:
-            if word[0] == d11[4] and word[2] == d14[2] and word not in a16_banned:
-                a16 = word
-                return a16
-        return EMPTY_WORD
+# A16 assignment
+def a16_insertion(a16_banned, d11, d14, four_char_words):
+    for word in four_char_words:
+        if word[0] == d11[4] and word[2] == d14[2] and word not in a16_banned:
+            a16 = word
+            return a16
+    return EMPTY_WORD
 
 # class Insertions(StateMachine):
 #     d3 = State('Empty', initial=True)
