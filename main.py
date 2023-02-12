@@ -16,7 +16,7 @@ four_char_words = []
 
 
 def word2vec(user_words: list[str]):
-    sim_list = requests.get('http://9a99-109-255-34-132.ngrok.io/request/?user_words=' + words)
+    sim_list = requests.get('http://5e4c-109-255-34-132.ngrok.io/request/?user_words=' + words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -302,7 +302,7 @@ class A11Insertion(WordInsertions):
         self.backtrack_state = "d11"
 
     def is_valid(self, word):
-        if word[0] == states[self.backtrack_state].word[0] and word[1] == states["d5"].word[
+        if word[0] == states[self.backtrack_state].word[0] and word[2] == states["d5"].word[
             5] and word not in self.banned_words:
             self.set_word(word)
             return True
@@ -320,7 +320,8 @@ class D13Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[0] == states[self.backtrack_state].word[3] and word not in self.banned_words:
+        if word[0] == states[self.backtrack_state].word[3] and word[2] == states["a15"].word[
+            3] and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
