@@ -16,7 +16,7 @@ four_char_words = []
 
 
 def word2vec(user_words: list[str]):
-    sim_list = requests.get('http://642e-109-255-34-132.ngrok.io/request/?user_words=' + words)
+    sim_list = requests.get('http://9a99-109-255-34-132.ngrok.io/request/?user_words=' + words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -350,6 +350,7 @@ class A16Insertion(WordInsertions):
         self.banned_words = []
         self.name = "a16"
         self.word_length = 4
+        self.next_state = ""
         self.backtrack_state = "d11"
 
     def is_valid(self, word):
@@ -482,7 +483,7 @@ def execute():
                 break
 
         if state.word == EMPTY_WORD:
-            n_state = next_state(current_state)
+            n_state = backtrack_state(current_state)
             i = cargo.index(n_state)
             states[n_state].ban_current_word()
             print("Insert for " + current_state + " failed: backtracking to " + cargo[i])
