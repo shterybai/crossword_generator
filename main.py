@@ -1,6 +1,3 @@
-import gensim
-from gensim.models import Word2Vec
-# from statemachine import StateMachine, State
 import requests
 import time
 
@@ -8,6 +5,7 @@ BANNED_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/123456789\'"
 EMPTY_WORD = "___________"
 EMPTY_CHAR = "_"
 MAX_RUN_TIME = 20000
+inserted_words = []
 
 # Word list initialization
 eleven_char_words = []
@@ -18,7 +16,7 @@ four_char_words = []
 
 def word2vec(user_words: list[str]):
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://8b0f-109-255-34-132.ngrok.io/request/?user_words=' + words)
+    sim_list = requests.get('http://576c-109-255-34-132.ngrok.io/request/?user_words=' + words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -33,16 +31,16 @@ def dictionaries(word_list):
     for word in word_list:
         if len(word) == 11:
             if all(c not in BANNED_CHARACTERS for c in word):
-                eleven_char_words.append(word)
+                eleven_char_words.append(word.upper())
         if len(word) == 10:
             if all(c not in BANNED_CHARACTERS for c in word):
-                ten_char_words.append(word)
+                ten_char_words.append(word.upper())
         if len(word) == 6:
             if all(c not in BANNED_CHARACTERS for c in word):
-                six_char_words.append(word)
+                six_char_words.append(word.upper())
         if len(word) == 4:
             if all(c not in BANNED_CHARACTERS for c in word):
-                four_char_words.append(word)
+                four_char_words.append(word.upper())
 
     print(time.time() - start_time, "seconds: Done")
 
@@ -95,7 +93,7 @@ class A8Insertion(WordInsertions):
         self.backtrack_state = "d3"
 
     def is_valid(self, word):
-        if word[4] == states[self.backtrack_state].word[3] and word not in self.banned_words:
+        if word[4].casefold() == states[self.backtrack_state].word[3].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -112,7 +110,7 @@ class A12Insertion(WordInsertions):
         self.backtrack_state = "d3"
 
     def is_valid(self, word):
-        if word[5] == states[self.backtrack_state].word[7] and word not in self.banned_words:
+        if word[5].casefold() == states[self.backtrack_state].word[7].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -129,7 +127,7 @@ class D2Insertion(WordInsertions):
         self.backtrack_state = "a8"
 
     def is_valid(self, word):
-        if word[3] == states[self.backtrack_state].word[2] and word not in self.banned_words:
+        if word[3].casefold() == states[self.backtrack_state].word[2].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -146,7 +144,7 @@ class D5Insertion(WordInsertions):
         self.backtrack_state = "a8"
 
     def is_valid(self, word):
-        if word[3] == states[self.backtrack_state].word[8] and word not in self.banned_words:
+        if word[3].casefold() == states[self.backtrack_state].word[8].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -163,7 +161,7 @@ class D10Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[2] == states[self.backtrack_state].word[1] and word not in self.banned_words:
+        if word[2].casefold() == states[self.backtrack_state].word[1].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -180,7 +178,7 @@ class D11Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[2] == states[self.backtrack_state].word[7] and word not in self.banned_words:
+        if word[2].casefold() == states[self.backtrack_state].word[7].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -197,8 +195,9 @@ class A7Insertion(WordInsertions):
         self.backtrack_state = "d3"
 
     def is_valid(self, word):
-        if word[0] == states[self.backtrack_state].word[1] and word[4] == states["d5"].word[
-            1] and word not in self.banned_words:
+        if word[0].casefold() == states[self.backtrack_state].word[1].casefold() and word[4].casefold() == \
+                states["d5"].word[
+                    1].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -215,8 +214,9 @@ class A15Insertion(WordInsertions):
         self.backtrack_state = "d10"
 
     def is_valid(self, word):
-        if word[1] == states[self.backtrack_state].word[4] and word[5] == states["d3"].word[
-            9] and word not in self.banned_words:
+        if word[1].casefold() == states[self.backtrack_state].word[4].casefold() and word[5].casefold() == \
+                states["d3"].word[
+                    9].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -233,7 +233,7 @@ class D1Insertion(WordInsertions):
         self.backtrack_state = "a8"
 
     def is_valid(self, word):
-        if word[3] == states[self.backtrack_state].word[0] and word not in self.banned_words:
+        if word[3].casefold() == states[self.backtrack_state].word[0].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -250,8 +250,9 @@ class D4Insertion(WordInsertions):
         self.backtrack_state = "a7"
 
     def is_valid(self, word):
-        if word[1] == states[self.backtrack_state].word[2] and word[3] == states["a8"].word[
-            6] and word not in self.banned_words:
+        if word[1].casefold() == states[self.backtrack_state].word[2].casefold() and word[3].casefold() == \
+                states["a8"].word[
+                    6].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -268,8 +269,9 @@ class A6Insertion(WordInsertions):
         self.backtrack_state = "d1"
 
     def is_valid(self, word):
-        if word[1] == states[self.backtrack_state].word[1] and word[3] == states["d2"].word[
-            1] and word not in self.banned_words:
+        if word[1].casefold() == states[self.backtrack_state].word[1].casefold() and word[3].casefold() == \
+                states["d2"].word[
+                    1].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -286,8 +288,9 @@ class A9Insertion(WordInsertions):
         self.backtrack_state = "d10"
 
     def is_valid(self, word):
-        if word[1] == states[self.backtrack_state].word[0] and word[3] == states["d2"].word[
-            5] and word not in self.banned_words:
+        if word[1].casefold() == states[self.backtrack_state].word[0].casefold() and word[3].casefold() == \
+                states["d2"].word[
+                    5].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -304,8 +307,9 @@ class A11Insertion(WordInsertions):
         self.backtrack_state = "d11"
 
     def is_valid(self, word):
-        if word[0] == states[self.backtrack_state].word[0] and word[2] == states["d5"].word[
-            5] and word not in self.banned_words:
+        if word[0].casefold() == states[self.backtrack_state].word[0].casefold() and word[2].casefold() == \
+                states["d5"].word[
+                    5].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -322,8 +326,9 @@ class D13Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[0] == states[self.backtrack_state].word[3] and word[2] == states["a15"].word[
-            3] and word not in self.banned_words:
+        if word[0].casefold() == states[self.backtrack_state].word[3].casefold() and word[2].casefold() == \
+                states["a15"].word[
+                    3].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -340,7 +345,7 @@ class D14Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[0] == states[self.backtrack_state].word[9] and word not in self.banned_words:
+        if word[0].casefold() == states[self.backtrack_state].word[9].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -357,8 +362,9 @@ class A16Insertion(WordInsertions):
         self.backtrack_state = "d11"
 
     def is_valid(self, word):
-        if word[0] == states[self.backtrack_state].word[4] and word[2] == states["d14"].word[
-            2] and word not in self.banned_words:
+        if word[0].casefold() == states[self.backtrack_state].word[4].casefold() and word[2].casefold() == \
+                states["d14"].word[
+                    2].casefold() and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -468,8 +474,9 @@ def backtrack_state(current_state):
 
 
 def execute():
-    print(time.time() - start_time, "seconds: Beginning insertions...")
+    inserted_words.clear()
     i = 0
+    print(time.time() - start_time, "seconds: Beginning insertions...")
     while i < MAX_RUN_TIME:
         if i >= len(cargo):
             print("End of cargo reached")
@@ -481,8 +488,9 @@ def execute():
 
         for word in word_list:
             if state.is_valid(word):
-                state.word = word
                 print("Insert Success: inserting into " + current_state + " \"" + state.word + "\"")
+                state.word = word
+                inserted_words.append(word)
                 i += 1
                 break
 
@@ -521,7 +529,7 @@ user_word_1 = input("Enter a word: ")
 user_word_2 = input("Enter another word: ")
 user_word_3 = input("Enter a final word: ")
 
-start_time =  time.time()
+start_time = time.time()
 
 words = user_word_1 + "," + user_word_2 + "," + user_word_3
 word2vec(words.split(','))
