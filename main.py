@@ -5,7 +5,7 @@ from better_profanity import profanity
 BANNED_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/123456789\'"
 EMPTY_WORD = "___________"
 EMPTY_CHAR = "_"
-MAX_RUN_TIME = 20000
+MAX_RUN_TIME = 200
 inserted_words = []
 
 # Word list initialization
@@ -489,7 +489,7 @@ def execute():
 
         for word in word_list:
             if state.is_valid(word):
-                print("Insert Success: inserting into " + current_state + " \"" + state.word + "\"")
+                print("Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
                 state.word = word
                 inserted_words.append(word)
                 i += 1
@@ -499,9 +499,13 @@ def execute():
             n_state = backtrack_state(current_state)
             i = cargo.index(n_state)
             states[n_state].ban_current_word()
-            print("Insert for " + current_state + " failed: backtracking to " + cargo[i])
+            print("Insertion for " + current_state + " failed: backtracking to " + cargo[i])
             print_words()
             continue
+
+        if state.word in state.banned_words:
+            print("No valid words remaining for " + current_state + "; crossword construction failed")
+            break
 
     print_words()
 
@@ -526,9 +530,9 @@ def print_words():
     print("16-across = " + states["a16"].word)
 
 
-bad_word = "shit"
-
-print(profanity.contains_profanity(bad_word))
+# bad_word = "shit"
+#
+# print(profanity.contains_profanity(bad_word))
 
 user_word_1 = input("Enter a word: ")
 user_word_2 = input("Enter another word: ")
