@@ -1,11 +1,12 @@
 import requests
 import time
+import numpy as np
 from better_profanity import profanity
 
 BANNED_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/123456789\'"
 EMPTY_WORD = "___________"
 EMPTY_CHAR = "_"
-MAX_RUN_TIME = 200
+MAX_RUN_TIME = 2000
 inserted_words = []
 
 # Word list initialization
@@ -14,10 +15,27 @@ ten_char_words = []
 six_char_words = []
 four_char_words = []
 
+# Grid creation
+# black_square = "#"
+# white_square = "-"
+# grid = [
+#     [black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square],
+#     [white_square, white_square, white_square, white_square, black_square, white_square, white_square, white_square, white_square, white_square, white_square],
+#     [black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square],
+#     [black_square, white_square, white_square, white_square, white_square, white_square, white_square, white_square, white_square, white_square, white_square],
+#     [black_square, black_square, black_square, white_square, black_square, white_square, black_square, black_square, black_square, white_square, black_square],
+#     [white_square, white_square, white_square, white_square, black_square, white_square, black_square, white_square, white_square, white_square, white_square],
+#     [black_square, white_square, black_square, black_square, black_square, white_square, black_square, white_square, black_square, black_square, black_square],
+#     [white_square, white_square, white_square, white_square, white_square, white_square, white_square, white_square, white_square, white_square, black_square],
+#     [black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square],
+#     [white_square, white_square, white_square, white_square, white_square, white_square, black_square, white_square, white_square, white_square, white_square],
+#     [black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square]
+# ]
+
 
 def word2vec(user_words: list[str]):
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://576c-109-255-34-132.ngrok.io/request/?user_words=' + words)
+    sim_list = requests.get('http://7284-109-255-34-132.ngrok.io/request/?user_words=' + words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -492,7 +510,7 @@ def execute():
                 print("Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
                 state.word = word
                 inserted_words.append(word)
-                i += 1
+                # i += 1
                 break
 
         if state.word == EMPTY_WORD:
@@ -507,7 +525,9 @@ def execute():
             print("No valid words remaining for " + current_state + "; crossword construction failed")
             break
 
-    print_words()
+        i += 1
+
+    draw_grid()
 
 
 def print_words():
@@ -528,6 +548,25 @@ def print_words():
     print("13-down = " + states["d13"].word)
     print("14-down = " + states["d14"].word)
     print("16-across = " + states["a16"].word)
+
+def draw_grid():
+    black_square = "#"
+    white_square = "-"
+    grid = [
+        [black_square, states["d1"].word[1], black_square, states["d2"].word[0], black_square, states["d3"].word[0], black_square, states["d4"].word[0], black_square, states["d5"].word[0], black_square],
+        [states["a6"].word[0], states["d1"].word[2], states["a6"].word[2], states["d2"].word[1], black_square, states["d3"].word[1], states["a7"].word[1], states["a7"].word[2], states["a7"].word[3], states["d2"].word[1], states["a7"].word[5]],
+        [black_square, states["d1"].word[3], black_square, states["d2"].word[2], black_square, states["d3"].word[2], black_square, states["d4"].word[2], black_square, states["d2"].word[2], black_square],
+        [black_square, states["a8"].word[0], states["a8"].word[1], states["a8"].word[2], states["a8"].word[3], states["d3"].word[3], states["a8"].word[5], states["a8"].word[6], states["a8"].word[7], states["a8"].word[8], states["a8"].word[9]],
+        [black_square, black_square, black_square, states["d2"].word[4], black_square, states["d3"].word[4], black_square, black_square, black_square, states["d2"].word[4], black_square],
+        [states["a9"].word[0], states["d10"].word[0], states["a9"].word[2], states["d2"].word[5], black_square, states["d3"].word[5], black_square, states["d11"].word[0], states["a11"].word[0], states["d2"].word[5], states["a11"].word[2]],
+        [black_square, states["d10"].word[1], black_square, black_square, black_square, states["d3"].word[6], black_square, states["d11"].word[1], black_square, black_square, black_square],
+        [states["a12"].word[0], states["a12"].word[1], states["a12"].word[2], states["a12"].word[3], states["a12"].word[4], states["d3"].word[7], states["a12"].word[6], states["a12"].word[7], states["a12"].word[8], states["a12"].word[9], black_square],
+        [black_square, states["d10"].word[3], black_square, states["d13"].word[0], black_square, states["d3"].word[8], black_square, states["d11"].word[3], black_square, states["d14"].word[1], black_square],
+        [states["a15"].word[0], states["d10"].word[4], states["a15"].word[2], states["a15"].word[3], states["a15"].word[4], states["d3"].word[9], black_square, states["d11"].word[4], states["a16"].word[1], states["d14"].word[2], states["a16"].word[3]],
+        [black_square, states["d10"].word[5], black_square, states["d13"].word[1], black_square, states["d3"].word[10], black_square, states["d11"].word[5], black_square, states["d14"].word[2], black_square]
+    ]
+
+    print(np.matrix(grid))
 
 
 # bad_word = "shit"
