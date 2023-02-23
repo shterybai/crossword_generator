@@ -35,7 +35,7 @@ four_char_words = []
 
 def word2vec(user_words: list[str]):
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://7284-109-255-34-132.ngrok.io/request/?user_words=' + words)
+    sim_list = requests.get('http://58d3-109-255-34-132.ngrok.io/request/?user_words=' + words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -553,24 +553,24 @@ def draw_grid():
     black_square = "#"
     white_square = "-"
     grid = [
-        [black_square, states["d1"].word[1], black_square, states["d2"].word[0], black_square, states["d3"].word[0], black_square, states["d4"].word[0], black_square, states["d5"].word[0], black_square],
-        [states["a6"].word[0], states["d1"].word[2], states["a6"].word[2], states["d2"].word[1], black_square, states["d3"].word[1], states["a7"].word[1], states["a7"].word[2], states["a7"].word[3], states["d2"].word[1], states["a7"].word[5]],
-        [black_square, states["d1"].word[3], black_square, states["d2"].word[2], black_square, states["d3"].word[2], black_square, states["d4"].word[2], black_square, states["d2"].word[2], black_square],
+        [black_square, states["d1"].word[0], black_square, states["d2"].word[0], black_square, states["d3"].word[0], black_square, states["d4"].word[0], black_square, states["d5"].word[0], black_square],
+        [states["a6"].word[0], states["d1"].word[1], states["a6"].word[2], states["d2"].word[1], black_square, states["d3"].word[1], states["a7"].word[1], states["a7"].word[2], states["a7"].word[3], states["d5"].word[1], states["a7"].word[5]],
+        [black_square, states["d1"].word[2], black_square, states["d2"].word[2], black_square, states["d3"].word[2], black_square, states["d4"].word[2], black_square, states["d5"].word[2], black_square],
         [black_square, states["a8"].word[0], states["a8"].word[1], states["a8"].word[2], states["a8"].word[3], states["d3"].word[3], states["a8"].word[5], states["a8"].word[6], states["a8"].word[7], states["a8"].word[8], states["a8"].word[9]],
-        [black_square, black_square, black_square, states["d2"].word[4], black_square, states["d3"].word[4], black_square, black_square, black_square, states["d2"].word[4], black_square],
-        [states["a9"].word[0], states["d10"].word[0], states["a9"].word[2], states["d2"].word[5], black_square, states["d3"].word[5], black_square, states["d11"].word[0], states["a11"].word[0], states["d2"].word[5], states["a11"].word[2]],
+        [black_square, black_square, black_square, states["d2"].word[4], black_square, states["d3"].word[4], black_square, black_square, black_square, states["d5"].word[4], black_square],
+        [states["a9"].word[0], states["d10"].word[0], states["a9"].word[2], states["d2"].word[5], black_square, states["d3"].word[5], black_square, states["d11"].word[0], states["a11"].word[1], states["d5"].word[5], states["a11"].word[3]],
         [black_square, states["d10"].word[1], black_square, black_square, black_square, states["d3"].word[6], black_square, states["d11"].word[1], black_square, black_square, black_square],
         [states["a12"].word[0], states["a12"].word[1], states["a12"].word[2], states["a12"].word[3], states["a12"].word[4], states["d3"].word[7], states["a12"].word[6], states["a12"].word[7], states["a12"].word[8], states["a12"].word[9], black_square],
-        [black_square, states["d10"].word[3], black_square, states["d13"].word[0], black_square, states["d3"].word[8], black_square, states["d11"].word[3], black_square, states["d14"].word[1], black_square],
+        [black_square, states["d10"].word[3], black_square, states["d13"].word[1], black_square, states["d3"].word[8], black_square, states["d11"].word[3], black_square, states["d14"].word[1], black_square],
         [states["a15"].word[0], states["d10"].word[4], states["a15"].word[2], states["a15"].word[3], states["a15"].word[4], states["d3"].word[9], black_square, states["d11"].word[4], states["a16"].word[1], states["d14"].word[2], states["a16"].word[3]],
-        [black_square, states["d10"].word[5], black_square, states["d13"].word[1], black_square, states["d3"].word[10], black_square, states["d11"].word[5], black_square, states["d14"].word[2], black_square]
+        [black_square, states["d10"].word[5], black_square, states["d13"].word[3], black_square, states["d3"].word[10], black_square, states["d11"].word[5], black_square, states["d14"].word[3], black_square]
     ]
 
     print(np.matrix(grid))
 
 
 # bad_word = "shit"
-#
+
 # print(profanity.contains_profanity(bad_word))
 
 user_word_1 = input("Enter a word: ")
