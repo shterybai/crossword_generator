@@ -2,6 +2,7 @@ import requests
 import time
 import numpy as np
 from better_profanity import profanity
+from PyDictionary import PyDictionary
 
 BANNED_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/123456789\'"
 EMPTY_WORD = "___________"
@@ -35,7 +36,7 @@ four_char_words = []
 
 def word2vec(user_words: list[str]):
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://58d3-109-255-34-132.ngrok.io/request/?user_words=' + words)
+    sim_list = requests.get('http://a8ef-109-255-231-194.ngrok.io/request/?user_words=' + words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -61,12 +62,43 @@ def dictionaries(word_list):
             if all(c not in BANNED_CHARACTERS for c in word):
                 four_char_words.append(word.upper())
 
+    # for word in eleven_char_words:
+    #     print(time.time() - start_time, "seconds: Checking for dictionary entry of the word " + word)
+    #     if PyDictionary.meaning(word, True) is None:
+    #         print(time.time() - start_time, "seconds: " + word + "is not in the English dictionary, removing...")
+    #         eleven_char_words.remove(word)
+    #     else:
+    #         print(time.time() - start_time, "seconds: " + word + " is a valid word")
+
+    # for word in ten_char_words:
+    #     if not PyDictionary.meaning(word):
+    #         ten_char_words.remove(word)
+    #
+    # for word in six_char_words:
+    #     if not PyDictionary.meaning(word):
+    #         six_char_words.remove(word)
+    #
+    # for word in four_char_words:
+    #     if not PyDictionary.meaning(word):
+    #         four_char_words.remove(word)
+
     print(time.time() - start_time, "seconds: Done")
 
-    # print("Eleven character words: " + eleven_char_words[0])
-    # print("Ten character words: " + ten_char_words[0])
-    # print("Six character words: " + six_char_words[0])
-    # print("Four character words: " + four_char_words[0])
+    # print("Eleven character words:")
+    # for word in eleven_char_words:
+    #     print(word)
+    
+    # print("Ten character words:")
+    # for word in ten_char_words:
+    #     print(word)
+    
+    # print("Six character words:")
+    # for word in six_char_words:
+    #     print(word)
+    
+    # print("Four character words:")
+    # for word in four_char_words:
+    #     print(word)
 
 
 class WordInsertions:
@@ -95,7 +127,7 @@ class D3Insertion(WordInsertions):
         self.next_state = "a8"
 
     def is_valid(self, word):
-        if word not in self.banned_words:
+        if not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -112,7 +144,7 @@ class A8Insertion(WordInsertions):
         self.backtrack_state = "d3"
 
     def is_valid(self, word):
-        if word[4].casefold() == states[self.backtrack_state].word[3].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+        if word[4].casefold() == states[self.backtrack_state].word[3].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -129,7 +161,7 @@ class A12Insertion(WordInsertions):
         self.backtrack_state = "d3"
 
     def is_valid(self, word):
-        if word[5].casefold() == states[self.backtrack_state].word[7].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+        if word[5].casefold() == states[self.backtrack_state].word[7].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -146,7 +178,7 @@ class D2Insertion(WordInsertions):
         self.backtrack_state = "a8"
 
     def is_valid(self, word):
-        if word[3].casefold() == states[self.backtrack_state].word[2].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+        if word[3].casefold() == states[self.backtrack_state].word[2].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -163,7 +195,7 @@ class D5Insertion(WordInsertions):
         self.backtrack_state = "a8"
 
     def is_valid(self, word):
-        if word[3].casefold() == states[self.backtrack_state].word[8].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+        if word[3].casefold() == states[self.backtrack_state].word[8].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -180,7 +212,7 @@ class D10Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[2].casefold() == states[self.backtrack_state].word[1].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+        if word[2].casefold() == states[self.backtrack_state].word[1].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -197,7 +229,7 @@ class D11Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[2].casefold() == states[self.backtrack_state].word[7].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+        if word[2].casefold() == states[self.backtrack_state].word[7].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -216,7 +248,7 @@ class A7Insertion(WordInsertions):
     def is_valid(self, word):
         if word[0].casefold() == states[self.backtrack_state].word[1].casefold() and word[4].casefold() == \
                 states["d5"].word[
-                    1].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+                    1].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -235,7 +267,7 @@ class A15Insertion(WordInsertions):
     def is_valid(self, word):
         if word[1].casefold() == states[self.backtrack_state].word[4].casefold() and word[5].casefold() == \
                 states["d3"].word[
-                    9].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+                    9].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -252,7 +284,7 @@ class D1Insertion(WordInsertions):
         self.backtrack_state = "a8"
 
     def is_valid(self, word):
-        if word[3].casefold() == states[self.backtrack_state].word[0].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+        if word[3].casefold() == states[self.backtrack_state].word[0].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -271,7 +303,7 @@ class D4Insertion(WordInsertions):
     def is_valid(self, word):
         if word[1].casefold() == states[self.backtrack_state].word[2].casefold() and word[3].casefold() == \
                 states["a8"].word[
-                    6].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+                    6].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -290,7 +322,7 @@ class A6Insertion(WordInsertions):
     def is_valid(self, word):
         if word[1].casefold() == states[self.backtrack_state].word[1].casefold() and word[3].casefold() == \
                 states["d2"].word[
-                    1].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+                    1].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -309,7 +341,7 @@ class A9Insertion(WordInsertions):
     def is_valid(self, word):
         if word[1].casefold() == states[self.backtrack_state].word[0].casefold() and word[3].casefold() == \
                 states["d2"].word[
-                    5].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+                    5].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -328,7 +360,7 @@ class A11Insertion(WordInsertions):
     def is_valid(self, word):
         if word[0].casefold() == states[self.backtrack_state].word[0].casefold() and word[2].casefold() == \
                 states["d5"].word[
-                    5].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+                    5].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -347,7 +379,7 @@ class D13Insertion(WordInsertions):
     def is_valid(self, word):
         if word[0].casefold() == states[self.backtrack_state].word[3].casefold() and word[2].casefold() == \
                 states["a15"].word[
-                    3].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+                    3].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -364,7 +396,7 @@ class D14Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[0].casefold() == states[self.backtrack_state].word[9].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+        if word[0].casefold() == states[self.backtrack_state].word[9].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -383,7 +415,7 @@ class A16Insertion(WordInsertions):
     def is_valid(self, word):
         if word[0].casefold() == states[self.backtrack_state].word[4].casefold() and word[2].casefold() == \
                 states["d14"].word[
-                    2].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+                    2].casefold() and not profanity.contains_profanity(word) and PyDictionary.meaning(word, True) is not None and word not in inserted_words and word not in self.banned_words:
             self.set_word(word)
             return True
         return False
@@ -498,7 +530,7 @@ def execute():
     print(time.time() - start_time, "seconds: Beginning insertions...")
     while i < MAX_RUN_TIME:
         if i >= len(cargo):
-            print("End of cargo reached")
+            print(time.time() - start_time, "seconds: End of cargo reached")
             break
 
         current_state = cargo[i]
@@ -507,7 +539,7 @@ def execute():
 
         for word in word_list:
             if state.is_valid(word):
-                print("Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
+                print(time.time() - start_time, "seconds: Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
                 state.word = word
                 inserted_words.append(word)
                 # i += 1
@@ -517,17 +549,19 @@ def execute():
             n_state = backtrack_state(current_state)
             i = cargo.index(n_state)
             states[n_state].ban_current_word()
-            print("Insertion for " + current_state + " failed: backtracking to " + cargo[i])
+            print(time.time() - start_time, "seconds: Insertion for " + current_state + " failed: backtracking to " + cargo[i])
             print_words()
             continue
 
         if state.word in state.banned_words:
-            print("No valid words remaining for " + current_state + "; crossword construction failed")
+            print(time.time() - start_time, "seconds: No valid words remaining for " + current_state + "; crossword construction failed")
             break
 
         i += 1
 
     draw_grid()
+
+    create_clues()
 
 
 def print_words():
@@ -568,10 +602,33 @@ def draw_grid():
 
     print(np.matrix(grid))
 
+def create_clues():
+    # clues = []
+    # if PyDictionary.meaning(states["a15"].word).values():
+    #     for value in PyDictionary.meaning(states["a15"].word).values():
+    #         clues.append(value)
 
-# bad_word = "shit"
+    print("\n Across Clues:")
+    print("6: ", PyDictionary.meaning(states["a6"].word).values())
+    print("7: ", PyDictionary.meaning(states["a7"].word).values())
+    print("8: ", PyDictionary.meaning(states["a8"].word).values())
+    print("9: ", PyDictionary.meaning(states["a9"].word).values())
+    print("11: ", PyDictionary.meaning(states["a11"].word).values())
+    print("12: ", PyDictionary.meaning(states["a12"].word).values())
+    print("15: ", PyDictionary.meaning(states["a15"].word).values())
+    print("16: ", PyDictionary.meaning(states["a16"].word).values())
 
-# print(profanity.contains_profanity(bad_word))
+    print("\n Down Clues:")
+    print("1: ", PyDictionary.meaning(states["d1"].word).values())
+    print("2: ", PyDictionary.meaning(states["d2"].word).values())
+    print("3: ", PyDictionary.meaning(states["d3"].word).values())
+    print("4: ", PyDictionary.meaning(states["d4"].word).values())
+    print("5: ", PyDictionary.meaning(states["d5"].word).values())
+    print("10: ", PyDictionary.meaning(states["d10"].word).values())
+    print("11: ", PyDictionary.meaning(states["d11"].word).values())
+    print("13: ", PyDictionary.meaning(states["d13"].word).values())
+    print("14: ", PyDictionary.meaning(states["d14"].word).values())
+
 
 user_word_1 = input("Enter a word: ")
 user_word_2 = input("Enter another word: ")
