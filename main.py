@@ -75,61 +75,61 @@ def dictionaries(word_list):
             # print(time.time() - start_time, "seconds: Adding " + word + " to the list")
             four_char_words.append(word.upper())
 
-    new_eleven_char_words = []
-    for row in eleven_char_nytcrosswords:
-        for word in eleven_char_words:
-            if word == row["Word"]:
-                print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
-                new_eleven_char_words.append(word)
-                break
-
-    eleven_char_words.clear()
-
-    for word in new_eleven_char_words:
-        print(time.time() - start_time, "seconds: Adding " + word + " to eleven_char_words")
-        eleven_char_words.append(word)
-
-    new_ten_char_words = []
-    for row in ten_char_nytcrosswords:
-        for word in ten_char_words:
-            if word == row["Word"]:
-                print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
-                new_ten_char_words.append(word)
-                break
-
-    ten_char_words.clear()
-
-    for word in new_ten_char_words:
-        print(time.time() - start_time, "seconds: Adding " + word + " to ten_char_words")
-        ten_char_words.append(word)
-
-    new_six_char_words = []
-    for row in six_char_nytcrosswords:
-        for word in six_char_words:
-            if word == row["Word"]:
-                print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
-                new_six_char_words.append(word)
-                break
-
-    six_char_words.clear()
-
-    for word in new_six_char_words:
-        print(time.time() - start_time, "seconds: Adding " + word + " to six_char_words")
-        six_char_words.append(word)
-
-    new_four_char_words = []
-    for row in four_char_nytcrosswords:
-        for word in four_char_words:
-            if word == row["Word"]:
-                print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
-                new_four_char_words.append(word)
-                break
-
-    four_char_words.clear()
-
-    for word in new_four_char_words:
-        print(time.time() - start_time, "seconds: Adding " + word + " to four_char_words")
-        four_char_words.append(word)
+    # new_eleven_char_words = []
+    # for row in eleven_char_nytcrosswords:
+    #     for word in eleven_char_words:
+    #         if word == row["Word"]:
+    #             print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
+    #             new_eleven_char_words.append(word)
+    #             break
+    #
+    # eleven_char_words.clear()
+    #
+    # for word in new_eleven_char_words:
+    #     print(time.time() - start_time, "seconds: Adding " + word + " to eleven_char_words")
+    #     eleven_char_words.append(word)
+    #
+    # new_ten_char_words = []
+    # for row in ten_char_nytcrosswords:
+    #     for word in ten_char_words:
+    #         if word == row["Word"]:
+    #             print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
+    #             new_ten_char_words.append(word)
+    #             break
+    #
+    # ten_char_words.clear()
+    #
+    # for word in new_ten_char_words:
+    #     print(time.time() - start_time, "seconds: Adding " + word + " to ten_char_words")
+    #     ten_char_words.append(word)
+    #
+    # new_six_char_words = []
+    # for row in six_char_nytcrosswords:
+    #     for word in six_char_words:
+    #         if word == row["Word"]:
+    #             print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
+    #             new_six_char_words.append(word)
+    #             break
+    #
+    # six_char_words.clear()
+    #
+    # for word in new_six_char_words:
+    #     print(time.time() - start_time, "seconds: Adding " + word + " to six_char_words")
+    #     six_char_words.append(word)
+    #
+    # new_four_char_words = []
+    # for row in four_char_nytcrosswords:
+    #     for word in four_char_words:
+    #         if word == row["Word"]:
+    #             print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
+    #             new_four_char_words.append(word)
+    #             break
+    #
+    # four_char_words.clear()
+    #
+    # for word in new_four_char_words:
+    #     print(time.time() - start_time, "seconds: Adding " + word + " to four_char_words")
+    #     four_char_words.append(word)
 
     print(time.time() - start_time, "seconds: Done")
 
@@ -688,76 +688,68 @@ def create_clues():
     a6_clue = a7_clue = a8_clue = a9_clue = a11_clue = a12_clue = a15_clue = a16_clue = ""
     d1_clue = d2_clue = d3_clue = d4_clue = d5_clue = d10_clue = d11_clue = d13_clue = d14_clue = ""
 
-    if d11_clue == "":
-        print("eleven memes")
-        for row in eleven_char_nytcrosswords:
-            if states["d11"].word == row["Word"]:
-                d11_clue = row["Clue"]
+    for row in eleven_char_nytcrosswords:
+        if states["d11"].word == row["Word"]:
+            d11_clue = row["Clue"]
 
-    if a8_clue == "" or a12_clue == "":
-        print("ten memes")
-        for row in ten_char_nytcrosswords:
-            if a8_clue == "" and states["a8"].word == row["Word"]:
-                a8_clue = row["Clue"]
-            if a12_clue == "" and states["a12"].word == row["Word"]:
-                a12_clue = row["Clue"]
+    for row in ten_char_nytcrosswords:
+        if states["a8"].word == row["Word"]:
+            a8_clue = row["Clue"]
+        if states["a12"].word == row["Word"]:
+            a12_clue = row["Clue"]
 
-    if d2_clue == "" or d5_clue == "" or d10_clue == "" or d11_clue == "" or a7_clue == "" or a15_clue == "":
-        print("six memes")
-        for row in six_char_nytcrosswords:
-            if d2_clue == "" and states["d2"].word == row["Word"]:
-                d2_clue = row["Clue"]
-            if d5_clue == "" and states["d5"].word == row["Word"]:
-                d5_clue = row["Clue"]
-            if d10_clue == "" and states["d10"].word == row["Word"]:
-                d10_clue = row["Clue"]
-            if d11_clue == "" and states["d11"].word == row["Word"]:
-                d11_clue = row["Clue"]
-            if a7_clue == "" and states["a7"].word == row["Word"]:
-                a7_clue = row["Clue"]
-            if a15_clue == "" and states["a15"].word == row["Word"]:
-                a15_clue = row["Clue"]
+    for row in six_char_nytcrosswords:
+        if states["d2"].word == row["Word"]:
+            d2_clue = row["Clue"]
+        if states["d5"].word == row["Word"]:
+            d5_clue = row["Clue"]
+        if states["d10"].word == row["Word"]:
+            d10_clue = row["Clue"]
+        if states["d11"].word == row["Word"]:
+            d11_clue = row["Clue"]
+        if states["a7"].word == row["Word"]:
+            a7_clue = row["Clue"]
+        if states["a15"].word == row["Word"]:
+            a15_clue = row["Clue"]
 
-    if d1_clue == "" or d4_clue == "" or a6_clue == "" or a9_clue == "" or a11_clue == "" or d13_clue == "" or d14_clue == "" or a16_clue == "":
-        print("four memes")
-        for row in four_char_nytcrosswords:
-            if d1_clue == "" and states["d1"].word == row["Word"]:
-                d1_clue = row["Clue"]
-            if d4_clue == "" and states["d4"].word == row["Word"]:
-                d4_clue = row["Clue"]
-            if a6_clue == "" and states["a6"].word == row["Word"]:
-                a6_clue = row["Clue"]
-            if a9_clue == "" and states["a9"].word == row["Word"]:
-                a9_clue = row["Clue"]
-            if a11_clue == "" and states["a11"].word == row["Word"]:
-                a11_clue = row["Clue"]
-            if d13_clue == "" and states["d13"].word == row["Word"]:
-                d13_clue = row["Clue"]
-            if d14_clue == "" and states["d14"].word == row["Word"]:
-                d14_clue = row["Clue"]
-            if a16_clue == "" and states["a16"].word == row["Word"]:
-                a16_clue = row["Clue"]
+    for row in four_char_nytcrosswords:
+        if states["d1"].word == row["Word"]:
+            d1_clue = row["Clue"]
+        if states["d4"].word == row["Word"]:
+            d4_clue = row["Clue"]
+        if states["a6"].word == row["Word"]:
+            a6_clue = row["Clue"]
+        if states["a9"].word == row["Word"]:
+            a9_clue = row["Clue"]
+        if states["a11"].word == row["Word"]:
+            a11_clue = row["Clue"]
+        if states["d13"].word == row["Word"]:
+            d13_clue = row["Clue"]
+        if states["d14"].word == row["Word"]:
+            d14_clue = row["Clue"]
+        if states["a16"].word == row["Word"]:
+            a16_clue = row["Clue"]
 
     print("\nAcross Clues:")
-    print("6: ", a6_clue)
-    print("7: ", a7_clue)
-    print("8: ", a8_clue)
-    print("9: ", a9_clue)
-    print("11: ", a11_clue)
-    print("12: ", a12_clue)
-    print("15: ", a15_clue)
-    print("16: ", a16_clue)
+    print("6: " + a6_clue)
+    print("7: " + a7_clue)
+    print("8: " + a8_clue)
+    print("9: " + a9_clue)
+    print("11: " + a11_clue)
+    print("12: " + a12_clue)
+    print("15: " + a15_clue)
+    print("16: " + a16_clue)
 
     print("\nDown Clues:")
-    print("1: ", d1_clue)
-    print("2: ", d2_clue)
-    print("3: ", d3_clue)
-    print("4: ", d4_clue)
-    print("5: ", d5_clue)
-    print("10: ", d10_clue)
-    print("11: ", d11_clue)
-    print("13: ", d13_clue)
-    print("14: ", d14_clue)
+    print("1: " + d1_clue)
+    print("2: " + d2_clue)
+    print("3: " + d3_clue)
+    print("4: " + d4_clue)
+    print("5: " + d5_clue)
+    print("10: " + d10_clue)
+    print("11: " + d11_clue)
+    print("13: " + d13_clue)
+    print("14: " + d14_clue)
 
 # bad_word = "shit"
 
