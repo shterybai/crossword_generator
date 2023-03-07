@@ -2,12 +2,23 @@ import requests
 import time
 import numpy as np
 from better_profanity import profanity
+import csv
 
 BANNED_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/123456789\'"
 EMPTY_WORD = "___________"
 EMPTY_CHAR = "_"
 MAX_RUN_TIME = 2000
 inserted_words = []
+
+eleven_char_file = open("eleven_char_nytcrosswords.csv", 'r')
+ten_char_file = open("ten_char_nytcrosswords.csv", 'r')
+six_char_file = open("six_char_nytcrosswords.csv", 'r')
+four_char_file = open("four_char_nytcrosswords.csv", 'r')
+
+eleven_char_nytcrosswords = csv.DictReader(eleven_char_file)
+ten_char_nytcrosswords = csv.DictReader(ten_char_file)
+six_char_nytcrosswords = csv.DictReader(six_char_file)
+four_char_nytcrosswords = csv.DictReader(four_char_file)
 
 # Word list initialization
 eleven_char_words = []
@@ -35,7 +46,7 @@ four_char_words = []
 
 def word2vec(user_words: list[str]):
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://58d3-109-255-34-132.ngrok.io/request/?user_words=' + words)
+    sim_list = requests.get('http://4e86-109-255-231-194.ngrok.io/request/?user_words=' + words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -47,26 +58,96 @@ def word2vec(user_words: list[str]):
 def dictionaries(word_list):
     # Populate word lists
     print(time.time() - start_time, "seconds: Populating word lists...")
+    # file = open("nytcrosswords.csv", 'r')
+    # nytcrosswords = csv.DictReader(file)
+
     for word in word_list:
-        if len(word) == 11:
-            if all(c not in BANNED_CHARACTERS for c in word):
-                eleven_char_words.append(word.upper())
-        if len(word) == 10:
-            if all(c not in BANNED_CHARACTERS for c in word):
-                ten_char_words.append(word.upper())
-        if len(word) == 6:
-            if all(c not in BANNED_CHARACTERS for c in word):
-                six_char_words.append(word.upper())
-        if len(word) == 4:
-            if all(c not in BANNED_CHARACTERS for c in word):
-                four_char_words.append(word.upper())
+        if len(word) == 11 and all(c not in BANNED_CHARACTERS for c in word):
+            # print(time.time() - start_time, "seconds: Adding " + word + " to the list")
+            eleven_char_words.append(word.upper())
+        if len(word) == 10 and all(c not in BANNED_CHARACTERS for c in word):
+            # print(time.time() - start_time, "seconds: Adding " + word + " to the list")
+            ten_char_words.append(word.upper())
+        if len(word) == 6 and all(c not in BANNED_CHARACTERS for c in word):
+            # print(time.time() - start_time, "seconds: Adding " + word + " to the list")
+            six_char_words.append(word.upper())
+        if len(word) == 4 and all(c not in BANNED_CHARACTERS for c in word):
+            # print(time.time() - start_time, "seconds: Adding " + word + " to the list")
+            four_char_words.append(word.upper())
+
+    new_eleven_char_words = []
+    for row in eleven_char_nytcrosswords:
+        for word in eleven_char_words:
+            if word == row["Word"]:
+                print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
+                new_eleven_char_words.append(word)
+                break
+
+    eleven_char_words.clear()
+
+    for word in new_eleven_char_words:
+        print(time.time() - start_time, "seconds: Adding " + word + " to eleven_char_words")
+        eleven_char_words.append(word)
+
+    new_ten_char_words = []
+    for row in ten_char_nytcrosswords:
+        for word in ten_char_words:
+            if word == row["Word"]:
+                print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
+                new_ten_char_words.append(word)
+                break
+
+    ten_char_words.clear()
+
+    for word in new_ten_char_words:
+        print(time.time() - start_time, "seconds: Adding " + word + " to ten_char_words")
+        ten_char_words.append(word)
+
+    new_six_char_words = []
+    for row in six_char_nytcrosswords:
+        for word in six_char_words:
+            if word == row["Word"]:
+                print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
+                new_six_char_words.append(word)
+                break
+
+    six_char_words.clear()
+
+    for word in new_six_char_words:
+        print(time.time() - start_time, "seconds: Adding " + word + " to six_char_words")
+        six_char_words.append(word)
+
+    new_four_char_words = []
+    for row in four_char_nytcrosswords:
+        for word in four_char_words:
+            if word == row["Word"]:
+                print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
+                new_four_char_words.append(word)
+                break
+
+    four_char_words.clear()
+
+    for word in new_four_char_words:
+        print(time.time() - start_time, "seconds: Adding " + word + " to four_char_words")
+        four_char_words.append(word)
 
     print(time.time() - start_time, "seconds: Done")
 
-    # print("Eleven character words: " + eleven_char_words[0])
-    # print("Ten character words: " + ten_char_words[0])
-    # print("Six character words: " + six_char_words[0])
-    # print("Four character words: " + four_char_words[0])
+    # print("Eleven character words:")
+    # for word in eleven_char_words:
+    #     print(word)
+
+    # print("Ten character words:")
+    # for word in ten_char_words:
+    #     print(word)
+
+    # print("Six character words:")
+    # for word in six_char_words:
+    #     print(word)
+
+    # print("Four character words:")
+    # for word in four_char_words:
+    #     print(word)
 
 
 class WordInsertions:
@@ -253,6 +334,15 @@ class D1Insertion(WordInsertions):
 
     def is_valid(self, word):
         if word[3].casefold() == states[self.backtrack_state].word[0].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
+            # print("big memes")
+            # for row in four_char_nytcrosswords:
+            #     print("Checking if " + word + " is the same as", row["Word"], "for d1")
+            #     if word == row["Word"]:
+            #         print("Found Word!")
+            #         self.set_word(word)
+            #         break
+            # if self.word != EMPTY_WORD:
+            #     return True
             self.set_word(word)
             return True
         return False
@@ -272,8 +362,11 @@ class D4Insertion(WordInsertions):
         if word[1].casefold() == states[self.backtrack_state].word[2].casefold() and word[3].casefold() == \
                 states["a8"].word[
                     6].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+            # for row in four_char_nytcrosswords:
+            #     print("Checking if " + word + " is the same as", row["Word"])
+            #     if word in row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -291,8 +384,12 @@ class A6Insertion(WordInsertions):
         if word[1].casefold() == states[self.backtrack_state].word[1].casefold() and word[3].casefold() == \
                 states["d2"].word[
                     1].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+            # for row in four_char_nytcrosswords:
+            #     print("Checking if " + word + " is the same as", row["Word"])
+            #     if word in row["Word"]:
+            #         print("Found Word!")
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -310,8 +407,11 @@ class A9Insertion(WordInsertions):
         if word[1].casefold() == states[self.backtrack_state].word[0].casefold() and word[3].casefold() == \
                 states["d2"].word[
                     5].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+            # for row in four_char_nytcrosswords:
+            #     print("Checking if " + word + " is the same as", row["Word"])
+            #     if word in row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -329,8 +429,11 @@ class A11Insertion(WordInsertions):
         if word[0].casefold() == states[self.backtrack_state].word[0].casefold() and word[2].casefold() == \
                 states["d5"].word[
                     5].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+            # for row in four_char_nytcrosswords:
+            #     print("Checking if " + word + " is the same as", row["Word"])
+            #     if word in row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -348,8 +451,11 @@ class D13Insertion(WordInsertions):
         if word[0].casefold() == states[self.backtrack_state].word[3].casefold() and word[2].casefold() == \
                 states["a15"].word[
                     3].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+            # for row in four_char_nytcrosswords:
+            #     print("Checking if " + word + " is the same as", row["Word"])
+            #     if word in row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -365,8 +471,11 @@ class D14Insertion(WordInsertions):
 
     def is_valid(self, word):
         if word[0].casefold() == states[self.backtrack_state].word[9].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+            # for row in four_char_nytcrosswords:
+            #     print("Checking if " + word + " is the same as", row["Word"])
+            #     if word in row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -384,8 +493,11 @@ class A16Insertion(WordInsertions):
         if word[0].casefold() == states[self.backtrack_state].word[4].casefold() and word[2].casefold() == \
                 states["d14"].word[
                     2].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+            # for row in four_char_nytcrosswords:
+            #     print("Checking if " + word + " is the same as", row["Word"])
+            #     if word in row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -529,6 +641,8 @@ def execute():
 
     draw_grid()
 
+    create_clues()
+
 
 def print_words():
     print("3-down = " + states["d3"].word)
@@ -548,6 +662,7 @@ def print_words():
     print("13-down = " + states["d13"].word)
     print("14-down = " + states["d14"].word)
     print("16-across = " + states["a16"].word)
+
 
 def draw_grid():
     black_square = "#"
@@ -569,6 +684,81 @@ def draw_grid():
     print(np.matrix(grid))
 
 
+def create_clues():
+    a6_clue = a7_clue = a8_clue = a9_clue = a11_clue = a12_clue = a15_clue = a16_clue = ""
+    d1_clue = d2_clue = d3_clue = d4_clue = d5_clue = d10_clue = d11_clue = d13_clue = d14_clue = ""
+
+    if d11_clue == "":
+        print("eleven memes")
+        for row in eleven_char_nytcrosswords:
+            if states["d11"].word == row["Word"]:
+                d11_clue = row["Clue"]
+
+    if a8_clue == "" or a12_clue == "":
+        print("ten memes")
+        for row in ten_char_nytcrosswords:
+            if a8_clue == "" and states["a8"].word == row["Word"]:
+                a8_clue = row["Clue"]
+            if a12_clue == "" and states["a12"].word == row["Word"]:
+                a12_clue = row["Clue"]
+
+    if d2_clue == "" or d5_clue == "" or d10_clue == "" or d11_clue == "" or a7_clue == "" or a15_clue == "":
+        print("six memes")
+        for row in six_char_nytcrosswords:
+            if d2_clue == "" and states["d2"].word == row["Word"]:
+                d2_clue = row["Clue"]
+            if d5_clue == "" and states["d5"].word == row["Word"]:
+                d5_clue = row["Clue"]
+            if d10_clue == "" and states["d10"].word == row["Word"]:
+                d10_clue = row["Clue"]
+            if d11_clue == "" and states["d11"].word == row["Word"]:
+                d11_clue = row["Clue"]
+            if a7_clue == "" and states["a7"].word == row["Word"]:
+                a7_clue = row["Clue"]
+            if a15_clue == "" and states["a15"].word == row["Word"]:
+                a15_clue = row["Clue"]
+
+    if d1_clue == "" or d4_clue == "" or a6_clue == "" or a9_clue == "" or a11_clue == "" or d13_clue == "" or d14_clue == "" or a16_clue == "":
+        print("four memes")
+        for row in four_char_nytcrosswords:
+            if d1_clue == "" and states["d1"].word == row["Word"]:
+                d1_clue = row["Clue"]
+            if d4_clue == "" and states["d4"].word == row["Word"]:
+                d4_clue = row["Clue"]
+            if a6_clue == "" and states["a6"].word == row["Word"]:
+                a6_clue = row["Clue"]
+            if a9_clue == "" and states["a9"].word == row["Word"]:
+                a9_clue = row["Clue"]
+            if a11_clue == "" and states["a11"].word == row["Word"]:
+                a11_clue = row["Clue"]
+            if d13_clue == "" and states["d13"].word == row["Word"]:
+                d13_clue = row["Clue"]
+            if d14_clue == "" and states["d14"].word == row["Word"]:
+                d14_clue = row["Clue"]
+            if a16_clue == "" and states["a16"].word == row["Word"]:
+                a16_clue = row["Clue"]
+
+    print("\nAcross Clues:")
+    print("6: ", a6_clue)
+    print("7: ", a7_clue)
+    print("8: ", a8_clue)
+    print("9: ", a9_clue)
+    print("11: ", a11_clue)
+    print("12: ", a12_clue)
+    print("15: ", a15_clue)
+    print("16: ", a16_clue)
+
+    print("\nDown Clues:")
+    print("1: ", d1_clue)
+    print("2: ", d2_clue)
+    print("3: ", d3_clue)
+    print("4: ", d4_clue)
+    print("5: ", d5_clue)
+    print("10: ", d10_clue)
+    print("11: ", d11_clue)
+    print("13: ", d13_clue)
+    print("14: ", d14_clue)
+
 # bad_word = "shit"
 
 # print(profanity.contains_profanity(bad_word))
@@ -584,4 +774,4 @@ word2vec(words.split(','))
 
 execute()
 
-print("Finished. Total execution time: ", time.time() - start_time)
+print("Finished. Total execution time: ", time.time() - start_time, " seconds")
