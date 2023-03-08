@@ -3,10 +3,15 @@ import time
 import numpy as np
 from better_profanity import profanity
 import csv
+from PyDictionary import PyDictionary
+from nltk.corpus import wordnet
+
+dictionary = PyDictionary()
 
 BANNED_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/123456789\'"
 EMPTY_WORD = "___________"
 EMPTY_CHAR = "_"
+EMPTY_CLUE = ""
 MAX_RUN_TIME = 2000
 inserted_words = []
 
@@ -46,7 +51,7 @@ four_char_words = []
 
 def word2vec(user_words: list[str]):
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://4e86-109-255-231-194.ngrok.io/request/?user_words=' + words)
+    sim_list = requests.get('http://aa15-109-255-231-194.ngrok.io/request/?user_words=' + words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -610,7 +615,7 @@ def execute():
     print(time.time() - start_time, "seconds: Beginning insertions...")
     while i < MAX_RUN_TIME:
         if i >= len(cargo):
-            print("End of cargo reached")
+            print(time.time() - start_time, "seconds: End of cargo reached")
             break
 
         current_state = cargo[i]
@@ -619,7 +624,7 @@ def execute():
 
         for word in word_list:
             if state.is_valid(word):
-                print("Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
+                print(time.time() - start_time, "seconds: Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
                 state.word = word
                 inserted_words.append(word)
                 # i += 1
@@ -629,12 +634,12 @@ def execute():
             n_state = backtrack_state(current_state)
             i = cargo.index(n_state)
             states[n_state].ban_current_word()
-            print("Insertion for " + current_state + " failed: backtracking to " + cargo[i])
+            print(time.time() - start_time, "seconds: Insertion for " + current_state + " failed: backtracking to " + cargo[i])
             print_words()
             continue
 
         if state.word in state.banned_words:
-            print("No valid words remaining for " + current_state + "; crossword construction failed")
+            print(time.time() - start_time, "seconds: No valid words remaining for " + current_state + "; crossword construction failed")
             break
 
         i += 1
@@ -685,9 +690,11 @@ def draw_grid():
 
 
 def create_clues():
-    a6_clue = a7_clue = a8_clue = a9_clue = a11_clue = a12_clue = a15_clue = a16_clue = ""
-    d1_clue = d2_clue = d3_clue = d4_clue = d5_clue = d10_clue = d11_clue = d13_clue = d14_clue = ""
+    a6_clue = a7_clue = a8_clue = a9_clue = a11_clue = a12_clue = a15_clue = a16_clue = EMPTY_CLUE
+    d1_clue = d2_clue = d3_clue = d4_clue = d5_clue = d10_clue = d11_clue = d13_clue = d14_clue = EMPTY_CLUE
 
+    # 1. CSV File Clues
+    print(time.time() - start_time, "seconds: Begininng CSV clues")
     for row in eleven_char_nytcrosswords:
         if states["d11"].word == row["Word"]:
             d11_clue = row["Clue"]
@@ -729,31 +736,84 @@ def create_clues():
             d14_clue = row["Clue"]
         if states["a16"].word == row["Word"]:
             a16_clue = row["Clue"]
+    print(time.time() - start_time, "seconds: Finished CSV clues")
+
+    # 2. PyDictionary Clues
+    print(time.time() - start_time, "seconds: Starting PyDictionary clues")
+    # if a6_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["a6"].word):
+    #         a6_clue = list(dictionary.meaning(states["a6"].word).values())[0][0]
+    # if a7_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["a7"].word):
+    #         a7_clue = list(dictionary.meaning(states["a7"].word).values())[0][0]
+    # if a8_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["a8"].word):
+    #         a8_clue = list(dictionary.meaning(states["a8"].word).values())[0][0]
+    # if a9_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["a9"].word):
+    #         a9_clue = list(dictionary.meaning(states["a9"].word).values())[0][0]
+    # if a11_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["a11"].word):
+    #         a11_clue = list(dictionary.meaning(states["a11"].word).values())[0][0]
+    # if a12_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["a12"].word):
+    #         a12_clue = list(dictionary.meaning(states["a12"].word).values())[0][0]
+    # if a15_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["a15"].word):
+    #         a15_clue = list(dictionary.meaning(states["a15"].word).values())[0][0]
+    # if a16_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["a16"].word):
+    #         a16_clue = list(dictionary.meaning(states["a16"].word).values())[0][0]
+    # if d1_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["d1"].word):
+    #         d1_clue = list(dictionary.meaning(states["d1"].word).values())[0][0]
+    # if d2_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["d2"].word):
+    #         d2_clue = list(dictionary.meaning(states["d2"].word).values())[0][0]
+    # if d3_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["d3"].word):
+    #         d3_clue = list(dictionary.meaning(states["d3"].word).values())[0][0]
+    # if d4_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["d4"].word):
+    #         d4_clue = list(dictionary.meaning(states["d4"].word).values()[0][0])
+    # if d5_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["d5"].word):
+    #         d5_clue = list(dictionary.meaning(states["d5"].word).values())[0][0]
+    # if d10_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["d10"].word):
+    #         d10_clue = list(dictionary.meaning(states["d10"].word).values())[0][0]
+    # if d11_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["d11"].word):
+    #         d11_clue = list(dictionary.meaning(states["d11"].word).values())[0][0]
+    # if d13_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["d13"].word):
+    #         d13_clue = list(dictionary.meaning(states["d13"].word).values())[0][0]
+    # if d14_clue == EMPTY_CLUE:
+    #     if dictionary.meaning(states["d14"].word):
+    #         d14_clue = list(dictionary.meaning(states["d14"].word).values())[0][0]
+    print(time.time() - start_time, "seconds: Finished PyDictionary clues")
 
     print("\nAcross Clues:")
-    print("6: " + a6_clue)
-    print("7: " + a7_clue)
-    print("8: " + a8_clue)
-    print("9: " + a9_clue)
-    print("11: " + a11_clue)
-    print("12: " + a12_clue)
-    print("15: " + a15_clue)
-    print("16: " + a16_clue)
+    print("6: " + str(a6_clue))
+    print("7: " + str(a7_clue))
+    print("8: " + str(a8_clue))
+    print("9: " + str(a9_clue))
+    print("11: " + str(a11_clue))
+    print("12: " + str(a12_clue))
+    print("15: " + str(a15_clue))
+    print("16: " + str(a16_clue))
 
     print("\nDown Clues:")
-    print("1: " + d1_clue)
-    print("2: " + d2_clue)
-    print("3: " + d3_clue)
-    print("4: " + d4_clue)
-    print("5: " + d5_clue)
-    print("10: " + d10_clue)
-    print("11: " + d11_clue)
-    print("13: " + d13_clue)
-    print("14: " + d14_clue)
+    print("1: " + str(d1_clue))
+    print("2: " + str(d2_clue))
+    print("3: " + str(d3_clue))
+    print("4: " + str(d4_clue))
+    print("5: " + str(d5_clue))
+    print("10: " + str(d10_clue))
+    print("11: " + str(d11_clue))
+    print("13: " + str(d13_clue))
+    print("14: " + str(d14_clue))
 
-# bad_word = "shit"
-
-# print(profanity.contains_profanity(bad_word))
 
 user_word_1 = input("Enter a word: ")
 user_word_2 = input("Enter another word: ")
@@ -766,4 +826,4 @@ word2vec(words.split(','))
 
 execute()
 
-print("Finished. Total execution time: ", time.time() - start_time, " seconds")
+print("\nFinished. Total execution time: ", time.time() - start_time, " seconds")
