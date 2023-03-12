@@ -16,15 +16,15 @@ EMPTY_CLUE = ""
 MAX_RUN_TIME = 2000
 inserted_words = []
 
-eleven_char_file = open("eleven_char_nytcrosswords.csv", 'r')
-ten_char_file = open("ten_char_nytcrosswords.csv", 'r')
-six_char_file = open("six_char_nytcrosswords.csv", 'r')
-four_char_file = open("four_char_nytcrosswords.csv", 'r')
+# eleven_char_file = open("eleven_char_nytcrosswords.csv", 'r')
+# ten_char_file = open("ten_char_nytcrosswords.csv", 'r')
+# six_char_file = open("six_char_nytcrosswords.csv", 'r')
+# four_char_file = open("four_char_nytcrosswords.csv", 'r')
 
-eleven_char_nytcrosswords = csv.DictReader(eleven_char_file)
-ten_char_nytcrosswords = csv.DictReader(ten_char_file)
-six_char_nytcrosswords = csv.DictReader(six_char_file)
-four_char_nytcrosswords = csv.DictReader(four_char_file)
+eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r'))
+# ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
+six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
 
 # Word list initialization
 eleven_char_words = []
@@ -52,7 +52,7 @@ four_char_words = []
 
 def word2vec(user_words: list[str]):
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://aa15-109-255-231-194.ngrok.io/request/?user_words=' + words)
+    sim_list = requests.get('http://3d78-109-255-231-194.ngrok.io/request/?user_words=' + words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -64,8 +64,6 @@ def word2vec(user_words: list[str]):
 def dictionaries(word_list):
     # Populate word lists
     print(time.time() - start_time, "seconds: Populating word lists...")
-    # file = open("nytcrosswords.csv", 'r')
-    # nytcrosswords = csv.DictReader(file)
 
     for word in word_list:
         if len(word) == 11 and all(c not in BANNED_CHARACTERS for c in word):
@@ -80,62 +78,6 @@ def dictionaries(word_list):
         if len(word) == 4 and all(c not in BANNED_CHARACTERS for c in word):
             # print(time.time() - start_time, "seconds: Adding " + word + " to the list")
             four_char_words.append(word.upper())
-
-    # new_eleven_char_words = []
-    # for row in eleven_char_nytcrosswords:
-    #     for word in eleven_char_words:
-    #         if word == row["Word"]:
-    #             print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
-    #             new_eleven_char_words.append(word)
-    #             break
-    #
-    # eleven_char_words.clear()
-    #
-    # for word in new_eleven_char_words:
-    #     print(time.time() - start_time, "seconds: Adding " + word + " to eleven_char_words")
-    #     eleven_char_words.append(word)
-    #
-    # new_ten_char_words = []
-    # for row in ten_char_nytcrosswords:
-    #     for word in ten_char_words:
-    #         if word == row["Word"]:
-    #             print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
-    #             new_ten_char_words.append(word)
-    #             break
-    #
-    # ten_char_words.clear()
-    #
-    # for word in new_ten_char_words:
-    #     print(time.time() - start_time, "seconds: Adding " + word + " to ten_char_words")
-    #     ten_char_words.append(word)
-    #
-    # new_six_char_words = []
-    # for row in six_char_nytcrosswords:
-    #     for word in six_char_words:
-    #         if word == row["Word"]:
-    #             print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
-    #             new_six_char_words.append(word)
-    #             break
-    #
-    # six_char_words.clear()
-    #
-    # for word in new_six_char_words:
-    #     print(time.time() - start_time, "seconds: Adding " + word + " to six_char_words")
-    #     six_char_words.append(word)
-    #
-    # new_four_char_words = []
-    # for row in four_char_nytcrosswords:
-    #     for word in four_char_words:
-    #         if word == row["Word"]:
-    #             print(time.time() - start_time, "seconds: Common word " + word + " found; adding")
-    #             new_four_char_words.append(word)
-    #             break
-    #
-    # four_char_words.clear()
-    #
-    # for word in new_four_char_words:
-    #     print(time.time() - start_time, "seconds: Adding " + word + " to four_char_words")
-    #     four_char_words.append(word)
 
     print(time.time() - start_time, "seconds: Done")
 
@@ -199,9 +141,19 @@ class A8Insertion(WordInsertions):
         self.backtrack_state = "d3"
 
     def is_valid(self, word):
-        if word[4].casefold() == states[self.backtrack_state].word[3].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+        # print(time.time() - start_time, "seconds: Searching for " + word)
+        if word[4].casefold() == states[self.backtrack_state].word[3].casefold() and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            print("Initial check for a8 passed; checking for loop...")
+            ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
+            for row in ten_char_nytcrosswords:
+                print(time.time() - start_time, "seconds: Entered for-loop; checking if " + word + " is the same as " + row["Word"])
+                if word == row["Word"]:
+                    print(time.time() - start_time, "seconds: Match found; adding...")
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -635,6 +587,7 @@ def execute():
             n_state = backtrack_state(current_state)
             i = cargo.index(n_state)
             states[n_state].ban_current_word()
+            inserted_words.remove(states[n_state].word)
             print(time.time() - start_time, "seconds: Insertion for " + current_state + " failed: backtracking to " + cargo[i])
             print_words()
             continue
@@ -700,6 +653,7 @@ def create_clues():
         if states["d11"].word == row["Word"]:
             d11_clue = row["Clue"]
 
+    ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
     for row in ten_char_nytcrosswords:
         if states["a8"].word == row["Word"]:
             a8_clue = row["Clue"]
@@ -740,93 +694,93 @@ def create_clues():
     print(time.time() - start_time, "seconds: Finished CSV clues")
 
     # 2. PyDictionary Clues
-    print(time.time() - start_time, "seconds: Starting PyDictionary clues")
-    if a6_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for a6_clue")
-        if dictionary.meaning(states["a6"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            a6_clue = list(dictionary.meaning(states["a6"].word).values())[0][0]
-    if a7_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for a7_clue")
-        if dictionary.meaning(states["a7"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            a7_clue = list(dictionary.meaning(states["a7"].word).values())[0][0]
-    if a8_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for a8_clue")
-        if dictionary.meaning(states["a8"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            a8_clue = list(dictionary.meaning(states["a8"].word).values())[0][0]
-    if a9_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for a9_clue")
-        if dictionary.meaning(states["a9"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            a9_clue = list(dictionary.meaning(states["a9"].word).values())[0][0]
-    if a11_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for a11_clue")
-        if dictionary.meaning(states["a11"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            a11_clue = list(dictionary.meaning(states["a11"].word).values())[0][0]
-    if a12_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for a12_clue")
-        if dictionary.meaning(states["a12"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            a12_clue = list(dictionary.meaning(states["a12"].word).values())[0][0]
-    if a15_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for a15_clue")
-        if dictionary.meaning(states["a15"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            a15_clue = list(dictionary.meaning(states["a15"].word).values())[0][0]
-    if a16_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for a16_clue")
-        if dictionary.meaning(states["a16"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            a16_clue = list(dictionary.meaning(states["a16"].word).values())[0][0]
-    if d1_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for d1_clue")
-        if dictionary.meaning(states["d1"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            d1_clue = list(dictionary.meaning(states["d1"].word).values())[0][0]
-    if d2_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for d2_clue")
-        if dictionary.meaning(states["d2"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            d2_clue = list(dictionary.meaning(states["d2"].word).values())[0][0]
-    if d3_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for d3_clue")
-        if dictionary.meaning(states["d3"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            d3_clue = list(dictionary.meaning(states["d3"].word).values())[0][0]
-    if d4_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for d4_clue")
-        if dictionary.meaning(states["d4"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            d4_clue = list(dictionary.meaning(states["d4"].word).values())[0][0]
-    if d5_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for d5_clue")
-        if dictionary.meaning(states["d5"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            d5_clue = list(dictionary.meaning(states["d5"].word).values())[0][0]
-    if d10_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for d10_clue")
-        if dictionary.meaning(states["d10"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            d10_clue = list(dictionary.meaning(states["d10"].word).values())[0][0]
-    if d11_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for d11_clue")
-        if dictionary.meaning(states["d11"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            d11_clue = list(dictionary.meaning(states["d11"].word).values())[0][0]
-    if d13_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for d13_clue")
-        if dictionary.meaning(states["d13"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            d13_clue = list(dictionary.meaning(states["d13"].word).values())[0][0]
-    if d14_clue == EMPTY_CLUE:
-        print(time.time() - start_time, "seconds: Checking PyDictionary for d14_clue")
-        if dictionary.meaning(states["d14"].word):
-            print(time.time() - start_time, "seconds: Clue found; assigning...")
-            d14_clue = list(dictionary.meaning(states["d14"].word).values())[0][0]
-    print(time.time() - start_time, "seconds: Finished PyDictionary clues")
+    # print(time.time() - start_time, "seconds: Starting PyDictionary clues")
+    # if a6_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a6_clue")
+    #     if dictionary.meaning(states["a6"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         a6_clue = list(dictionary.meaning(states["a6"].word).values())[0][0]
+    # if a7_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a7_clue")
+    #     if dictionary.meaning(states["a7"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         a7_clue = list(dictionary.meaning(states["a7"].word).values())[0][0]
+    # if a8_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a8_clue")
+    #     if dictionary.meaning(states["a8"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         a8_clue = list(dictionary.meaning(states["a8"].word).values())[0][0]
+    # if a9_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a9_clue")
+    #     if dictionary.meaning(states["a9"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         a9_clue = list(dictionary.meaning(states["a9"].word).values())[0][0]
+    # if a11_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a11_clue")
+    #     if dictionary.meaning(states["a11"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         a11_clue = list(dictionary.meaning(states["a11"].word).values())[0][0]
+    # if a12_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a12_clue")
+    #     if dictionary.meaning(states["a12"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         a12_clue = list(dictionary.meaning(states["a12"].word).values())[0][0]
+    # if a15_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a15_clue")
+    #     if dictionary.meaning(states["a15"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         a15_clue = list(dictionary.meaning(states["a15"].word).values())[0][0]
+    # if a16_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a16_clue")
+    #     if dictionary.meaning(states["a16"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         a16_clue = list(dictionary.meaning(states["a16"].word).values())[0][0]
+    # if d1_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d1_clue")
+    #     if dictionary.meaning(states["d1"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         d1_clue = list(dictionary.meaning(states["d1"].word).values())[0][0]
+    # if d2_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d2_clue")
+    #     if dictionary.meaning(states["d2"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         d2_clue = list(dictionary.meaning(states["d2"].word).values())[0][0]
+    # if d3_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d3_clue")
+    #     if dictionary.meaning(states["d3"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         d3_clue = list(dictionary.meaning(states["d3"].word).values())[0][0]
+    # if d4_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d4_clue")
+    #     if dictionary.meaning(states["d4"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         d4_clue = list(dictionary.meaning(states["d4"].word).values())[0][0]
+    # if d5_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d5_clue")
+    #     if dictionary.meaning(states["d5"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         d5_clue = list(dictionary.meaning(states["d5"].word).values())[0][0]
+    # if d10_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d10_clue")
+    #     if dictionary.meaning(states["d10"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         d10_clue = list(dictionary.meaning(states["d10"].word).values())[0][0]
+    # if d11_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d11_clue")
+    #     if dictionary.meaning(states["d11"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         d11_clue = list(dictionary.meaning(states["d11"].word).values())[0][0]
+    # if d13_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d13_clue")
+    #     if dictionary.meaning(states["d13"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         d13_clue = list(dictionary.meaning(states["d13"].word).values())[0][0]
+    # if d14_clue == EMPTY_CLUE:
+    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d14_clue")
+    #     if dictionary.meaning(states["d14"].word):
+    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
+    #         d14_clue = list(dictionary.meaning(states["d14"].word).values())[0][0]
+    # print(time.time() - start_time, "seconds: Finished PyDictionary clues")
 
     print("\nAcross Clues:")
     print("6: " + str(a6_clue))
