@@ -21,10 +21,10 @@ inserted_words = []
 # six_char_file = open("six_char_nytcrosswords.csv", 'r')
 # four_char_file = open("four_char_nytcrosswords.csv", 'r')
 
-eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r'))
+# eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r'))
 # ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
-six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
-four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+# six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+# four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
 
 # Word list initialization
 eleven_char_words = []
@@ -125,8 +125,11 @@ class D3Insertion(WordInsertions):
 
     def is_valid(self, word):
         if word not in self.banned_words:
-            self.set_word(word)
-            return True
+            eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r'))
+            for row in eleven_char_nytcrosswords:
+                if word == row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -142,16 +145,16 @@ class A8Insertion(WordInsertions):
 
     def is_valid(self, word):
         # print(time.time() - start_time, "seconds: Searching for " + word)
-        if word[4].casefold() == states[self.backtrack_state].word[3].casefold() and \
+        if word[4] == states[self.backtrack_state].word[3] and \
                 not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            print("Initial check for a8 passed; checking for loop...")
+            # print("Initial check for a8 passed; checking for loop...")
             ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
             for row in ten_char_nytcrosswords:
-                print(time.time() - start_time, "seconds: Entered for-loop; checking if " + word + " is the same as " + row["Word"])
+                # print(time.time() - start_time, "seconds: Checking if " + word + " is the same as " + row["Word"])
                 if word == row["Word"]:
-                    print(time.time() - start_time, "seconds: Match found; adding...")
+                    # print(time.time() - start_time, "seconds: Match found; adding...")
                     self.set_word(word)
                     return True
         return False
@@ -168,9 +171,15 @@ class A12Insertion(WordInsertions):
         self.backtrack_state = "d3"
 
     def is_valid(self, word):
-        if word[5].casefold() == states[self.backtrack_state].word[7].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+        if word[5] == states[self.backtrack_state].word[7] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
+            for row in ten_char_nytcrosswords:
+                if word == row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -185,9 +194,15 @@ class D2Insertion(WordInsertions):
         self.backtrack_state = "a8"
 
     def is_valid(self, word):
-        if word[3].casefold() == states[self.backtrack_state].word[2].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+        if word[3] == states[self.backtrack_state].word[2] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            for row in six_char_nytcrosswords:
+                if word == row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -202,9 +217,15 @@ class D5Insertion(WordInsertions):
         self.backtrack_state = "a8"
 
     def is_valid(self, word):
-        if word[3].casefold() == states[self.backtrack_state].word[8].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+        if word[3] == states[self.backtrack_state].word[8] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            for row in six_char_nytcrosswords:
+                if word == row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -219,9 +240,15 @@ class D10Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[2].casefold() == states[self.backtrack_state].word[1].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+        if word[2] == states[self.backtrack_state].word[1] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            for row in six_char_nytcrosswords:
+                if word == row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -236,9 +263,15 @@ class D11Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[2].casefold() == states[self.backtrack_state].word[7].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+        if word[2] == states[self.backtrack_state].word[7] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            for row in six_char_nytcrosswords:
+                if word == row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -253,11 +286,16 @@ class A7Insertion(WordInsertions):
         self.backtrack_state = "d3"
 
     def is_valid(self, word):
-        if word[0].casefold() == states[self.backtrack_state].word[1].casefold() and word[4].casefold() == \
-                states["d5"].word[
-                    1].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+        if word[0] == states[self.backtrack_state].word[1] and \
+                word[4] == states["d5"].word[1] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            for row in six_char_nytcrosswords:
+                if word == row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -272,11 +310,16 @@ class A15Insertion(WordInsertions):
         self.backtrack_state = "d10"
 
     def is_valid(self, word):
-        if word[1].casefold() == states[self.backtrack_state].word[4].casefold() and word[5].casefold() == \
-                states["d3"].word[
-                    9].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            self.set_word(word)
-            return True
+        if word[1] == states[self.backtrack_state].word[4] and \
+                word[5] == states["d3"].word[9] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            for row in six_char_nytcrosswords:
+                if word == row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -291,18 +334,15 @@ class D1Insertion(WordInsertions):
         self.backtrack_state = "a8"
 
     def is_valid(self, word):
-        if word[3].casefold() == states[self.backtrack_state].word[0].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            # print("big memes")
-            # for row in four_char_nytcrosswords:
-            #     print("Checking if " + word + " is the same as", row["Word"], "for d1")
-            #     if word == row["Word"]:
-            #         print("Found Word!")
-            #         self.set_word(word)
-            #         break
-            # if self.word != EMPTY_WORD:
-            #     return True
-            self.set_word(word)
-            return True
+        if word[3] == states[self.backtrack_state].word[0] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            for row in four_char_nytcrosswords:
+                if word == row["Word"]:
+                    self.set_word(word)
+                    return True
         return False
 
 
@@ -317,12 +357,14 @@ class D4Insertion(WordInsertions):
         self.backtrack_state = "a7"
 
     def is_valid(self, word):
-        if word[1].casefold() == states[self.backtrack_state].word[2].casefold() and word[3].casefold() == \
-                states["a8"].word[
-                    6].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            # for row in four_char_nytcrosswords:
-            #     print("Checking if " + word + " is the same as", row["Word"])
-            #     if word in row["Word"]:
+        if word[1] == states[self.backtrack_state].word[2] and \
+                word[3] == states["a8"].word[6] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            for row in four_char_nytcrosswords:
+                if word == row["Word"]:
                     self.set_word(word)
                     return True
         return False
@@ -339,13 +381,14 @@ class A6Insertion(WordInsertions):
         self.backtrack_state = "d1"
 
     def is_valid(self, word):
-        if word[1].casefold() == states[self.backtrack_state].word[1].casefold() and word[3].casefold() == \
-                states["d2"].word[
-                    1].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            # for row in four_char_nytcrosswords:
-            #     print("Checking if " + word + " is the same as", row["Word"])
-            #     if word in row["Word"]:
-            #         print("Found Word!")
+        if word[1] == states[self.backtrack_state].word[1] and \
+                word[3] == states["d2"].word[1] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            for row in four_char_nytcrosswords:
+                if word == row["Word"]:
                     self.set_word(word)
                     return True
         return False
@@ -362,12 +405,14 @@ class A9Insertion(WordInsertions):
         self.backtrack_state = "d10"
 
     def is_valid(self, word):
-        if word[1].casefold() == states[self.backtrack_state].word[0].casefold() and word[3].casefold() == \
-                states["d2"].word[
-                    5].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            # for row in four_char_nytcrosswords:
-            #     print("Checking if " + word + " is the same as", row["Word"])
-            #     if word in row["Word"]:
+        if word[1] == states[self.backtrack_state].word[0] and \
+                word[3] == states["d2"].word[5] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            for row in four_char_nytcrosswords:
+                if word == row["Word"]:
                     self.set_word(word)
                     return True
         return False
@@ -384,12 +429,14 @@ class A11Insertion(WordInsertions):
         self.backtrack_state = "d11"
 
     def is_valid(self, word):
-        if word[0].casefold() == states[self.backtrack_state].word[0].casefold() and word[2].casefold() == \
-                states["d5"].word[
-                    5].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            # for row in four_char_nytcrosswords:
-            #     print("Checking if " + word + " is the same as", row["Word"])
-            #     if word in row["Word"]:
+        if word[0] == states[self.backtrack_state].word[0] and \
+                word[2] == states["d5"].word[5] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            for row in four_char_nytcrosswords:
+                if word == row["Word"]:
                     self.set_word(word)
                     return True
         return False
@@ -406,12 +453,14 @@ class D13Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[0].casefold() == states[self.backtrack_state].word[3].casefold() and word[2].casefold() == \
-                states["a15"].word[
-                    3].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            # for row in four_char_nytcrosswords:
-            #     print("Checking if " + word + " is the same as", row["Word"])
-            #     if word in row["Word"]:
+        if word[0] == states[self.backtrack_state].word[3] and \
+                word[2] == states["a15"].word[3] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            for row in four_char_nytcrosswords:
+                if word == row["Word"]:
                     self.set_word(word)
                     return True
         return False
@@ -428,10 +477,13 @@ class D14Insertion(WordInsertions):
         self.backtrack_state = "a12"
 
     def is_valid(self, word):
-        if word[0].casefold() == states[self.backtrack_state].word[9].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            # for row in four_char_nytcrosswords:
-            #     print("Checking if " + word + " is the same as", row["Word"])
-            #     if word in row["Word"]:
+        if word[0] == states[self.backtrack_state].word[9] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            for row in four_char_nytcrosswords:
+                if word == row["Word"]:
                     self.set_word(word)
                     return True
         return False
@@ -448,12 +500,14 @@ class A16Insertion(WordInsertions):
         self.backtrack_state = "d11"
 
     def is_valid(self, word):
-        if word[0].casefold() == states[self.backtrack_state].word[4].casefold() and word[2].casefold() == \
-                states["d14"].word[
-                    2].casefold() and not profanity.contains_profanity(word) and word not in inserted_words and word not in self.banned_words:
-            # for row in four_char_nytcrosswords:
-            #     print("Checking if " + word + " is the same as", row["Word"])
-            #     if word in row["Word"]:
+        if word[0] == states[self.backtrack_state].word[4] and \
+                word[2] == states["d14"].word[2] and \
+                not profanity.contains_profanity(word) and \
+                word not in inserted_words and \
+                word not in self.banned_words:
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            for row in four_char_nytcrosswords:
+                if word == row["Word"]:
                     self.set_word(word)
                     return True
         return False
@@ -649,9 +703,10 @@ def create_clues():
 
     # 1. CSV File Clues
     print(time.time() - start_time, "seconds: Begininng CSV clues")
+    eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r'))
     for row in eleven_char_nytcrosswords:
-        if states["d11"].word == row["Word"]:
-            d11_clue = row["Clue"]
+        if states["d3"].word == row["Word"]:
+            d3_clue = row["Clue"]
 
     ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
     for row in ten_char_nytcrosswords:
@@ -660,6 +715,7 @@ def create_clues():
         if states["a12"].word == row["Word"]:
             a12_clue = row["Clue"]
 
+    six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
     for row in six_char_nytcrosswords:
         if states["d2"].word == row["Word"]:
             d2_clue = row["Clue"]
@@ -674,6 +730,7 @@ def create_clues():
         if states["a15"].word == row["Word"]:
             a15_clue = row["Clue"]
 
+    four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
     for row in four_char_nytcrosswords:
         if states["d1"].word == row["Word"]:
             d1_clue = row["Clue"]
@@ -692,95 +749,6 @@ def create_clues():
         if states["a16"].word == row["Word"]:
             a16_clue = row["Clue"]
     print(time.time() - start_time, "seconds: Finished CSV clues")
-
-    # 2. PyDictionary Clues
-    # print(time.time() - start_time, "seconds: Starting PyDictionary clues")
-    # if a6_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a6_clue")
-    #     if dictionary.meaning(states["a6"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         a6_clue = list(dictionary.meaning(states["a6"].word).values())[0][0]
-    # if a7_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a7_clue")
-    #     if dictionary.meaning(states["a7"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         a7_clue = list(dictionary.meaning(states["a7"].word).values())[0][0]
-    # if a8_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a8_clue")
-    #     if dictionary.meaning(states["a8"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         a8_clue = list(dictionary.meaning(states["a8"].word).values())[0][0]
-    # if a9_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a9_clue")
-    #     if dictionary.meaning(states["a9"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         a9_clue = list(dictionary.meaning(states["a9"].word).values())[0][0]
-    # if a11_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a11_clue")
-    #     if dictionary.meaning(states["a11"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         a11_clue = list(dictionary.meaning(states["a11"].word).values())[0][0]
-    # if a12_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a12_clue")
-    #     if dictionary.meaning(states["a12"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         a12_clue = list(dictionary.meaning(states["a12"].word).values())[0][0]
-    # if a15_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a15_clue")
-    #     if dictionary.meaning(states["a15"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         a15_clue = list(dictionary.meaning(states["a15"].word).values())[0][0]
-    # if a16_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for a16_clue")
-    #     if dictionary.meaning(states["a16"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         a16_clue = list(dictionary.meaning(states["a16"].word).values())[0][0]
-    # if d1_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d1_clue")
-    #     if dictionary.meaning(states["d1"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         d1_clue = list(dictionary.meaning(states["d1"].word).values())[0][0]
-    # if d2_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d2_clue")
-    #     if dictionary.meaning(states["d2"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         d2_clue = list(dictionary.meaning(states["d2"].word).values())[0][0]
-    # if d3_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d3_clue")
-    #     if dictionary.meaning(states["d3"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         d3_clue = list(dictionary.meaning(states["d3"].word).values())[0][0]
-    # if d4_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d4_clue")
-    #     if dictionary.meaning(states["d4"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         d4_clue = list(dictionary.meaning(states["d4"].word).values())[0][0]
-    # if d5_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d5_clue")
-    #     if dictionary.meaning(states["d5"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         d5_clue = list(dictionary.meaning(states["d5"].word).values())[0][0]
-    # if d10_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d10_clue")
-    #     if dictionary.meaning(states["d10"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         d10_clue = list(dictionary.meaning(states["d10"].word).values())[0][0]
-    # if d11_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d11_clue")
-    #     if dictionary.meaning(states["d11"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         d11_clue = list(dictionary.meaning(states["d11"].word).values())[0][0]
-    # if d13_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d13_clue")
-    #     if dictionary.meaning(states["d13"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         d13_clue = list(dictionary.meaning(states["d13"].word).values())[0][0]
-    # if d14_clue == EMPTY_CLUE:
-    #     print(time.time() - start_time, "seconds: Checking PyDictionary for d14_clue")
-    #     if dictionary.meaning(states["d14"].word):
-    #         print(time.time() - start_time, "seconds: Clue found; assigning...")
-    #         d14_clue = list(dictionary.meaning(states["d14"].word).values())[0][0]
-    # print(time.time() - start_time, "seconds: Finished PyDictionary clues")
 
     print("\nAcross Clues:")
     print("6: " + str(a6_clue))
