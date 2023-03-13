@@ -4,8 +4,7 @@ import numpy as np
 from better_profanity import profanity
 import csv
 from PyDictionary import PyDictionary
-# import PyDictionary.core
-# print(PyDictionary.core.__file__)
+from flask import Flask, request
 
 dictionary = PyDictionary()
 
@@ -15,16 +14,6 @@ EMPTY_CHAR = "_"
 EMPTY_CLUE = ""
 MAX_RUN_TIME = 2000
 inserted_words = []
-
-# eleven_char_file = open("eleven_char_nytcrosswords.csv", 'r')
-# ten_char_file = open("ten_char_nytcrosswords.csv", 'r')
-# six_char_file = open("six_char_nytcrosswords.csv", 'r')
-# four_char_file = open("four_char_nytcrosswords.csv", 'r')
-
-# eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r'))
-# ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
-# six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
-# four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
 
 # Word list initialization
 eleven_char_words = []
@@ -49,10 +38,27 @@ four_char_words = []
 #     [black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square]
 # ]
 
+app = Flask(__name__)
+start_time = time.time()
+
+
+@app.route('/request/', methods=['GET', 'POST'])
+def request_page():
+    user_words = str(request.args.get('user_words'))
+    word2vec(user_words)
+
+    execute()
+
+    create_clues()
+
+    result = states["d3"].word
+
+    return result
+
 
 def word2vec(user_words: list[str]):
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://3d78-109-255-231-194.ngrok.io/request/?user_words=' + words)
+    sim_list = requests.get('http://a030-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -652,9 +658,9 @@ def execute():
 
         i += 1
 
-    draw_grid()
+    # draw_grid()
 
-    create_clues()
+    # create_clues()
 
 
 def print_words():
@@ -772,15 +778,12 @@ def create_clues():
     print("14: " + str(d14_clue))
 
 
-user_word_1 = input("Enter a word: ")
-user_word_2 = input("Enter another word: ")
-user_word_3 = input("Enter a final word: ")
+# user_word_1 = input("Enter a word: ")
+# user_word_2 = input("Enter another word: ")
+# user_word_3 = input("Enter a final word: ")
 
-start_time = time.time()
-
-words = user_word_1 + "," + user_word_2 + "," + user_word_3
-word2vec(words.split(','))
-
-execute()
+# words = user_word_1 + "," + user_word_2 + "," + user_word_3
 
 print("\nFinished. Total execution time: ", time.time() - start_time, " seconds")
+
+app.run(port=7776)
