@@ -1,12 +1,8 @@
 import requests
 import time
 import numpy as np
-from better_profanity import profanity
 import csv
-from PyDictionary import PyDictionary
 from flask import Flask, request
-
-dictionary = PyDictionary()
 
 BANNED_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/123456789\'"
 EMPTY_WORD = "___________"
@@ -42,7 +38,7 @@ app = Flask(__name__)
 start_time = time.time()
 
 
-@app.route('/request/', methods=['GET', 'POST'])
+@app.route('/request', methods=['GET', 'POST'])
 def request_page():
     user_words = str(request.args.get('user_words'))
     word2vec(user_words)
@@ -58,7 +54,7 @@ def request_page():
 
 def word2vec(user_words: list[str]):
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://a030-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
+    sim_list = requests.get('http://41df-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -152,7 +148,6 @@ class A8Insertion(WordInsertions):
     def is_valid(self, word):
         # print(time.time() - start_time, "seconds: Searching for " + word)
         if word[4] == states[self.backtrack_state].word[3] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             # print("Initial check for a8 passed; checking for loop...")
@@ -178,7 +173,6 @@ class A12Insertion(WordInsertions):
 
     def is_valid(self, word):
         if word[5] == states[self.backtrack_state].word[7] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
@@ -201,7 +195,6 @@ class D2Insertion(WordInsertions):
 
     def is_valid(self, word):
         if word[3] == states[self.backtrack_state].word[2] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
@@ -224,7 +217,6 @@ class D5Insertion(WordInsertions):
 
     def is_valid(self, word):
         if word[3] == states[self.backtrack_state].word[8] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
@@ -247,7 +239,6 @@ class D10Insertion(WordInsertions):
 
     def is_valid(self, word):
         if word[2] == states[self.backtrack_state].word[1] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
@@ -270,7 +261,6 @@ class D11Insertion(WordInsertions):
 
     def is_valid(self, word):
         if word[2] == states[self.backtrack_state].word[7] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
@@ -294,7 +284,6 @@ class A7Insertion(WordInsertions):
     def is_valid(self, word):
         if word[0] == states[self.backtrack_state].word[1] and \
                 word[4] == states["d5"].word[1] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
@@ -318,7 +307,6 @@ class A15Insertion(WordInsertions):
     def is_valid(self, word):
         if word[1] == states[self.backtrack_state].word[4] and \
                 word[5] == states["d3"].word[9] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
@@ -341,7 +329,6 @@ class D1Insertion(WordInsertions):
 
     def is_valid(self, word):
         if word[3] == states[self.backtrack_state].word[0] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
@@ -365,7 +352,6 @@ class D4Insertion(WordInsertions):
     def is_valid(self, word):
         if word[1] == states[self.backtrack_state].word[2] and \
                 word[3] == states["a8"].word[6] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
@@ -389,7 +375,6 @@ class A6Insertion(WordInsertions):
     def is_valid(self, word):
         if word[1] == states[self.backtrack_state].word[1] and \
                 word[3] == states["d2"].word[1] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
@@ -413,7 +398,6 @@ class A9Insertion(WordInsertions):
     def is_valid(self, word):
         if word[1] == states[self.backtrack_state].word[0] and \
                 word[3] == states["d2"].word[5] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
@@ -437,7 +421,6 @@ class A11Insertion(WordInsertions):
     def is_valid(self, word):
         if word[0] == states[self.backtrack_state].word[0] and \
                 word[2] == states["d5"].word[5] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
@@ -461,7 +444,6 @@ class D13Insertion(WordInsertions):
     def is_valid(self, word):
         if word[0] == states[self.backtrack_state].word[3] and \
                 word[2] == states["a15"].word[3] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
@@ -484,7 +466,6 @@ class D14Insertion(WordInsertions):
 
     def is_valid(self, word):
         if word[0] == states[self.backtrack_state].word[9] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
@@ -508,7 +489,6 @@ class A16Insertion(WordInsertions):
     def is_valid(self, word):
         if word[0] == states[self.backtrack_state].word[4] and \
                 word[2] == states["d14"].word[2] and \
-                not profanity.contains_profanity(word) and \
                 word not in inserted_words and \
                 word not in self.banned_words:
             four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
