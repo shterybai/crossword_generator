@@ -35,7 +35,8 @@ four_char_words = []
 # ]
 
 app = Flask(__name__)
-start_time = time.time()
+# start_time = time.time()
+start_time = 0
 
 
 @app.route('/request', methods=['GET', 'POST'])
@@ -47,14 +48,35 @@ def request_page():
 
     create_clues()
 
-    result = states["d3"].word
+    result = [
+        {'slot': states["d3"].name, 'word': states["d3"].word, 'clue': states["d3"].clue},
+        {'slot': states["a8"].name, 'word': states["a8"].word, 'clue': states["a8"].clue},
+        {'slot': states["a12"].name, 'word': states["a12"].word, 'clue': states["a12"].clue},
+        {'slot': states["d2"].name, 'word': states["d2"].word, 'clue': states["d2"].clue},
+        {'slot': states["d5"].name, 'word': states["d5"].word, 'clue': states["d5"].clue},
+        {'slot': states["d10"].name, 'word': states["d10"].word, 'clue': states["d10"].clue},
+        {'slot': states["d11"].name, 'word': states["d11"].word, 'clue': states["d11"].clue},
+        {'slot': states["a7"].name, 'word': states["a7"].word, 'clue': states["a7"].clue},
+        {'slot': states["a15"].name, 'word': states["a15"].word, 'clue': states["a15"].clue},
+        {'slot': states["d1"].name, 'word': states["d1"].word, 'clue': states["d1"].clue},
+        {'slot': states["d4"].name, 'word': states["d4"].word, 'clue': states["d4"].clue},
+        {'slot': states["a6"].name, 'word': states["a6"].word, 'clue': states["a6"].clue},
+        {'slot': states["a9"].name, 'word': states["a9"].word, 'clue': states["a9"].clue},
+        {'slot': states["a11"].name, 'word': states["a11"].word, 'clue': states["a11"].clue},
+        {'slot': states["d13"].name, 'word': states["d13"].word, 'clue': states["d13"].clue},
+        {'slot': states["d14"].name, 'word': states["d14"].word, 'clue': states["d14"].clue},
+        {'slot': states["a16"].name, 'word': states["a16"].word, 'clue': states["a16"].clue},
+    ]
+
+    print("\nFinished. Total execution time: ", time.time() - start_time, " seconds")
 
     return result
 
 
 def word2vec(user_words: list[str]):
+    start_time = time.time()
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://41df-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
+    sim_list = requests.get('http://7bba-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -124,6 +146,7 @@ class D3Insertion(WordInsertions):
         self.name = "d3"
         self.word_length = 11
         self.next_state = "a8"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word not in self.banned_words:
@@ -144,6 +167,7 @@ class A8Insertion(WordInsertions):
         self.word_length = 10
         self.next_state = "a12"
         self.backtrack_state = "d3"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         # print(time.time() - start_time, "seconds: Searching for " + word)
@@ -170,6 +194,7 @@ class A12Insertion(WordInsertions):
         self.word_length = 10
         self.next_state = "d2"
         self.backtrack_state = "d3"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[5] == states[self.backtrack_state].word[7] and \
@@ -192,6 +217,7 @@ class D2Insertion(WordInsertions):
         self.word_length = 6
         self.next_state = "d5"
         self.backtrack_state = "a8"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[3] == states[self.backtrack_state].word[2] and \
@@ -214,6 +240,7 @@ class D5Insertion(WordInsertions):
         self.word_length = 6
         self.next_state = "d10"
         self.backtrack_state = "a8"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[3] == states[self.backtrack_state].word[8] and \
@@ -236,6 +263,7 @@ class D10Insertion(WordInsertions):
         self.word_length = 6
         self.next_state = "d11"
         self.backtrack_state = "a12"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[2] == states[self.backtrack_state].word[1] and \
@@ -258,6 +286,7 @@ class D11Insertion(WordInsertions):
         self.word_length = 6
         self.next_state = "a7"
         self.backtrack_state = "a12"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[2] == states[self.backtrack_state].word[7] and \
@@ -280,6 +309,7 @@ class A7Insertion(WordInsertions):
         self.word_length = 6
         self.next_state = "a15"
         self.backtrack_state = "d3"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[0] == states[self.backtrack_state].word[1] and \
@@ -303,6 +333,7 @@ class A15Insertion(WordInsertions):
         self.word_length = 6
         self.next_state = "d1"
         self.backtrack_state = "d10"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[1] == states[self.backtrack_state].word[4] and \
@@ -326,6 +357,7 @@ class D1Insertion(WordInsertions):
         self.word_length = 4
         self.next_state = "d4"
         self.backtrack_state = "a8"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[3] == states[self.backtrack_state].word[0] and \
@@ -348,6 +380,7 @@ class D4Insertion(WordInsertions):
         self.word_length = 4
         self.next_state = "a6"
         self.backtrack_state = "a7"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[1] == states[self.backtrack_state].word[2] and \
@@ -371,6 +404,7 @@ class A6Insertion(WordInsertions):
         self.word_length = 4
         self.next_state = "a9"
         self.backtrack_state = "d1"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[1] == states[self.backtrack_state].word[1] and \
@@ -394,6 +428,7 @@ class A9Insertion(WordInsertions):
         self.word_length = 4
         self.next_state = "a11"
         self.backtrack_state = "d10"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[1] == states[self.backtrack_state].word[0] and \
@@ -417,6 +452,7 @@ class A11Insertion(WordInsertions):
         self.word_length = 4
         self.next_state = "d13"
         self.backtrack_state = "d11"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[0] == states[self.backtrack_state].word[0] and \
@@ -440,6 +476,7 @@ class D13Insertion(WordInsertions):
         self.word_length = 4
         self.next_state = "d14"
         self.backtrack_state = "a12"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[0] == states[self.backtrack_state].word[3] and \
@@ -463,6 +500,7 @@ class D14Insertion(WordInsertions):
         self.word_length = 4
         self.next_state = "a16"
         self.backtrack_state = "a12"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[0] == states[self.backtrack_state].word[9] and \
@@ -485,6 +523,7 @@ class A16Insertion(WordInsertions):
         self.word_length = 4
         self.next_state = ""
         self.backtrack_state = "d11"
+        self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
         if word[0] == states[self.backtrack_state].word[4] and \
@@ -684,86 +723,78 @@ def draw_grid():
 
 
 def create_clues():
-    a6_clue = a7_clue = a8_clue = a9_clue = a11_clue = a12_clue = a15_clue = a16_clue = EMPTY_CLUE
-    d1_clue = d2_clue = d3_clue = d4_clue = d5_clue = d10_clue = d11_clue = d13_clue = d14_clue = EMPTY_CLUE
+    # a6_clue = a7_clue = a8_clue = a9_clue = a11_clue = a12_clue = a15_clue = a16_clue = EMPTY_CLUE
+    # d1_clue = d2_clue = d3_clue = d4_clue = d5_clue = d10_clue = d11_clue = d13_clue = d14_clue = EMPTY_CLUE
 
     # 1. CSV File Clues
     print(time.time() - start_time, "seconds: Begininng CSV clues")
     eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r'))
     for row in eleven_char_nytcrosswords:
         if states["d3"].word == row["Word"]:
-            d3_clue = row["Clue"]
+            states["d3"].clue = row["Clue"]
 
     ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
     for row in ten_char_nytcrosswords:
         if states["a8"].word == row["Word"]:
-            a8_clue = row["Clue"]
+            states["a8"].clue = row["Clue"]
         if states["a12"].word == row["Word"]:
-            a12_clue = row["Clue"]
+            states["a12"].clue = row["Clue"]
 
     six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
     for row in six_char_nytcrosswords:
         if states["d2"].word == row["Word"]:
-            d2_clue = row["Clue"]
+            states["d2"].clue = row["Clue"]
         if states["d5"].word == row["Word"]:
-            d5_clue = row["Clue"]
+            states["d5"].clue = row["Clue"]
         if states["d10"].word == row["Word"]:
-            d10_clue = row["Clue"]
+            states["d10"].clue = row["Clue"]
         if states["d11"].word == row["Word"]:
-            d11_clue = row["Clue"]
+            states["d11"].clue = row["Clue"]
         if states["a7"].word == row["Word"]:
-            a7_clue = row["Clue"]
+            states["a7"].clue = row["Clue"]
         if states["a15"].word == row["Word"]:
-            a15_clue = row["Clue"]
+            states["a15"].clue = row["Clue"]
 
     four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
     for row in four_char_nytcrosswords:
         if states["d1"].word == row["Word"]:
-            d1_clue = row["Clue"]
+            states["d1"].clue = row["Clue"]
         if states["d4"].word == row["Word"]:
-            d4_clue = row["Clue"]
+            states["d4"].clue = row["Clue"]
         if states["a6"].word == row["Word"]:
-            a6_clue = row["Clue"]
+            states["a6"].clue = row["Clue"]
         if states["a9"].word == row["Word"]:
-            a9_clue = row["Clue"]
+            states["a9"].clue = row["Clue"]
         if states["a11"].word == row["Word"]:
-            a11_clue = row["Clue"]
+            states["a11"].clue = row["Clue"]
         if states["d13"].word == row["Word"]:
-            d13_clue = row["Clue"]
+            states["d13"].clue = row["Clue"]
         if states["d14"].word == row["Word"]:
-            d14_clue = row["Clue"]
+            states["d14"].clue = row["Clue"]
         if states["a16"].word == row["Word"]:
-            a16_clue = row["Clue"]
+            states["a16"].clue = row["Clue"]
     print(time.time() - start_time, "seconds: Finished CSV clues")
 
     print("\nAcross Clues:")
-    print("6: " + str(a6_clue))
-    print("7: " + str(a7_clue))
-    print("8: " + str(a8_clue))
-    print("9: " + str(a9_clue))
-    print("11: " + str(a11_clue))
-    print("12: " + str(a12_clue))
-    print("15: " + str(a15_clue))
-    print("16: " + str(a16_clue))
+    print("6: " + str(states["a6"].clue) + ": " + states["a6"].word)
+    print("7: " + str(states["a7"].clue) + ": " + states["a7"].word)
+    print("8: " + str(states["a8"].clue) + ": " + states["a8"].word)
+    print("9: " + str(states["a9"].clue) + ": " + states["a9"].word)
+    print("11: " + str(states["a11"].clue) + ": " + states["a11"].word)
+    print("12: " + str(states["a12"].clue) + ": " + states["a12"].word)
+    print("15: " + str(states["a15"].clue) + ": " + states["a15"].word)
+    print("16: " + str(states["a16"].clue) + ": " + states["a16"].word)
 
     print("\nDown Clues:")
-    print("1: " + str(d1_clue))
-    print("2: " + str(d2_clue))
-    print("3: " + str(d3_clue))
-    print("4: " + str(d4_clue))
-    print("5: " + str(d5_clue))
-    print("10: " + str(d10_clue))
-    print("11: " + str(d11_clue))
-    print("13: " + str(d13_clue))
-    print("14: " + str(d14_clue))
+    print("1: " + str(states["d1"].clue) + ": " + states["d1"].word)
+    print("2: " + str(states["d2"].clue) + ": " + states["d2"].word)
+    print("3: " + str(states["d3"].clue) + ": " + states["d3"].word)
+    print("4: " + str(states["d4"].clue) + ": " + states["d4"].word)
+    print("5: " + str(states["d5"].clue) + ": " + states["d5"].word)
+    print("10: " + str(states["d10"].clue) + ": " + states["d10"].word)
+    print("11: " + str(states["d11"].clue) + ": " + states["d11"].word)
+    print("13: " + str(states["d13"].clue) + ": " + states["d13"].word)
+    print("14: " + str(states["d14"].clue) + ": " + states["d14"].word)
 
-
-# user_word_1 = input("Enter a word: ")
-# user_word_2 = input("Enter another word: ")
-# user_word_3 = input("Enter a final word: ")
-
-# words = user_word_1 + "," + user_word_2 + "," + user_word_3
-
-print("\nFinished. Total execution time: ", time.time() - start_time, " seconds")
 
 app.run(port=7776)
