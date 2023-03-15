@@ -56,23 +56,23 @@ def request_page():
         "grid_length": grid_length,
         "crossword": crossword,
         "words": [
-            {'slot': states["d3"].name, 'word': states["d3"].word, 'clue': states["d3"].clue, 'orientation': states["d3"].orientation, 'number': states["d3"].number},
+            {'slot': states["a6"].name, 'word': states["a6"].word, 'clue': states["a6"].clue, 'orientation': states["a6"].orientation, 'number': states["a6"].number},
+            {'slot': states["a7"].name, 'word': states["a7"].word, 'clue': states["a7"].clue, 'orientation': states["a7"].orientation, 'number': states["a7"].number},
             {'slot': states["a8"].name, 'word': states["a8"].word, 'clue': states["a8"].clue, 'orientation': states["a8"].orientation, 'number': states["a8"].number},
+            {'slot': states["a9"].name, 'word': states["a9"].word, 'clue': states["a9"].clue, 'orientation': states["a9"].orientation, 'number': states["a9"].number},
+            {'slot': states["a11"].name, 'word': states["a11"].word, 'clue': states["a11"].clue, 'orientation': states["a11"].orientation, 'number': states["a11"].number},
             {'slot': states["a12"].name, 'word': states["a12"].word, 'clue': states["a12"].clue, 'orientation': states["a12"].orientation, 'number': states["a12"].number},
+            {'slot': states["a15"].name, 'word': states["a15"].word, 'clue': states["a15"].clue, 'orientation': states["a15"].orientation, 'number': states["a15"].number},
+            {'slot': states["a16"].name, 'word': states["a16"].word, 'clue': states["a16"].clue,'orientation': states["a16"].orientation, 'number': states["a16"].number},
+            {'slot': states["d1"].name, 'word': states["d1"].word, 'clue': states["d1"].clue, 'orientation': states["d1"].orientation, 'number': states["d1"].number},
             {'slot': states["d2"].name, 'word': states["d2"].word, 'clue': states["d2"].clue, 'orientation': states["d2"].orientation, 'number': states["d2"].number},
+            {'slot': states["d3"].name, 'word': states["d3"].word, 'clue': states["d3"].clue, 'orientation': states["d3"].orientation, 'number': states["d3"].number},
+            {'slot': states["d4"].name, 'word': states["d4"].word, 'clue': states["d4"].clue, 'orientation': states["d4"].orientation, 'number': states["d4"].number},
             {'slot': states["d5"].name, 'word': states["d5"].word, 'clue': states["d5"].clue, 'orientation': states["d5"].orientation, 'number': states["d5"].number},
             {'slot': states["d10"].name, 'word': states["d10"].word, 'clue': states["d10"].clue, 'orientation': states["d10"].orientation, 'number': states["d10"].number},
             {'slot': states["d11"].name, 'word': states["d11"].word, 'clue': states["d11"].clue, 'orientation': states["d11"].orientation, 'number': states["d11"].number},
-            {'slot': states["a7"].name, 'word': states["a7"].word, 'clue': states["a7"].clue, 'orientation': states["a7"].orientation, 'number': states["a7"].number},
-            {'slot': states["a15"].name, 'word': states["a15"].word, 'clue': states["a15"].clue, 'orientation': states["a15"].orientation, 'number': states["a15"].number},
-            {'slot': states["d1"].name, 'word': states["d1"].word, 'clue': states["d1"].clue, 'orientation': states["d1"].orientation, 'number': states["d1"].number},
-            {'slot': states["d4"].name, 'word': states["d4"].word, 'clue': states["d4"].clue, 'orientation': states["d4"].orientation, 'number': states["d4"].number},
-            {'slot': states["a6"].name, 'word': states["a6"].word, 'clue': states["a6"].clue, 'orientation': states["a6"].orientation, 'number': states["a6"].number},
-            {'slot': states["a9"].name, 'word': states["a9"].word, 'clue': states["a9"].clue, 'orientation': states["a9"].orientation, 'number': states["a9"].number},
-            {'slot': states["a11"].name, 'word': states["a11"].word, 'clue': states["a11"].clue, 'orientation': states["a11"].orientation, 'number': states["a11"].number},
             {'slot': states["d13"].name, 'word': states["d13"].word, 'clue': states["d13"].clue, 'orientation': states["d13"].orientation, 'number': states["d13"].number},
             {'slot': states["d14"].name, 'word': states["d14"].word, 'clue': states["d14"].clue, 'orientation': states["d14"].orientation, 'number': states["d14"].number},
-            {'slot': states["a16"].name, 'word': states["a16"].word, 'clue': states["a16"].clue, 'orientation': states["a16"].orientation, 'number': states["a16"].number},
         ]
     }
 
@@ -84,7 +84,7 @@ def request_page():
 def word2vec(user_words: list[str]):
     start_time = time.time()
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://f946-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
+    sim_list = requests.get('http://95e3-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
 
     word_list = [i[0] for i in sim_list.json()]
 
