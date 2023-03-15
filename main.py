@@ -17,6 +17,8 @@ ten_char_words = []
 six_char_words = []
 four_char_words = []
 
+grid_length = 11
+
 # Grid creation
 # black_square = "#"
 # white_square = "-"
@@ -46,27 +48,33 @@ def request_page():
 
     execute()
 
+    crossword = draw_grid()
+
     create_clues()
 
-    result = [
-        {'slot': states["d3"].name, 'word': states["d3"].word, 'clue': states["d3"].clue},
-        {'slot': states["a8"].name, 'word': states["a8"].word, 'clue': states["a8"].clue},
-        {'slot': states["a12"].name, 'word': states["a12"].word, 'clue': states["a12"].clue},
-        {'slot': states["d2"].name, 'word': states["d2"].word, 'clue': states["d2"].clue},
-        {'slot': states["d5"].name, 'word': states["d5"].word, 'clue': states["d5"].clue},
-        {'slot': states["d10"].name, 'word': states["d10"].word, 'clue': states["d10"].clue},
-        {'slot': states["d11"].name, 'word': states["d11"].word, 'clue': states["d11"].clue},
-        {'slot': states["a7"].name, 'word': states["a7"].word, 'clue': states["a7"].clue},
-        {'slot': states["a15"].name, 'word': states["a15"].word, 'clue': states["a15"].clue},
-        {'slot': states["d1"].name, 'word': states["d1"].word, 'clue': states["d1"].clue},
-        {'slot': states["d4"].name, 'word': states["d4"].word, 'clue': states["d4"].clue},
-        {'slot': states["a6"].name, 'word': states["a6"].word, 'clue': states["a6"].clue},
-        {'slot': states["a9"].name, 'word': states["a9"].word, 'clue': states["a9"].clue},
-        {'slot': states["a11"].name, 'word': states["a11"].word, 'clue': states["a11"].clue},
-        {'slot': states["d13"].name, 'word': states["d13"].word, 'clue': states["d13"].clue},
-        {'slot': states["d14"].name, 'word': states["d14"].word, 'clue': states["d14"].clue},
-        {'slot': states["a16"].name, 'word': states["a16"].word, 'clue': states["a16"].clue},
-    ]
+    result = {
+        "grid_length": grid_length,
+        "crossword": crossword,
+        "words": [
+            {'slot': states["d3"].name, 'word': states["d3"].word, 'clue': states["d3"].clue, 'orientation': states["d3"].orientation, 'number': states["d3"].number},
+            {'slot': states["a8"].name, 'word': states["a8"].word, 'clue': states["a8"].clue, 'orientation': states["a8"].orientation, 'number': states["a8"].number},
+            {'slot': states["a12"].name, 'word': states["a12"].word, 'clue': states["a12"].clue, 'orientation': states["a12"].orientation, 'number': states["a12"].number},
+            {'slot': states["d2"].name, 'word': states["d2"].word, 'clue': states["d2"].clue, 'orientation': states["d2"].orientation, 'number': states["d2"].number},
+            {'slot': states["d5"].name, 'word': states["d5"].word, 'clue': states["d5"].clue, 'orientation': states["d5"].orientation, 'number': states["d5"].number},
+            {'slot': states["d10"].name, 'word': states["d10"].word, 'clue': states["d10"].clue, 'orientation': states["d10"].orientation, 'number': states["d10"].number},
+            {'slot': states["d11"].name, 'word': states["d11"].word, 'clue': states["d11"].clue, 'orientation': states["d11"].orientation, 'number': states["d11"].number},
+            {'slot': states["a7"].name, 'word': states["a7"].word, 'clue': states["a7"].clue, 'orientation': states["a7"].orientation, 'number': states["a7"].number},
+            {'slot': states["a15"].name, 'word': states["a15"].word, 'clue': states["a15"].clue, 'orientation': states["a15"].orientation, 'number': states["a15"].number},
+            {'slot': states["d1"].name, 'word': states["d1"].word, 'clue': states["d1"].clue, 'orientation': states["d1"].orientation, 'number': states["d1"].number},
+            {'slot': states["d4"].name, 'word': states["d4"].word, 'clue': states["d4"].clue, 'orientation': states["d4"].orientation, 'number': states["d4"].number},
+            {'slot': states["a6"].name, 'word': states["a6"].word, 'clue': states["a6"].clue, 'orientation': states["a6"].orientation, 'number': states["a6"].number},
+            {'slot': states["a9"].name, 'word': states["a9"].word, 'clue': states["a9"].clue, 'orientation': states["a9"].orientation, 'number': states["a9"].number},
+            {'slot': states["a11"].name, 'word': states["a11"].word, 'clue': states["a11"].clue, 'orientation': states["a11"].orientation, 'number': states["a11"].number},
+            {'slot': states["d13"].name, 'word': states["d13"].word, 'clue': states["d13"].clue, 'orientation': states["d13"].orientation, 'number': states["d13"].number},
+            {'slot': states["d14"].name, 'word': states["d14"].word, 'clue': states["d14"].clue, 'orientation': states["d14"].orientation, 'number': states["d14"].number},
+            {'slot': states["a16"].name, 'word': states["a16"].word, 'clue': states["a16"].clue, 'orientation': states["a16"].orientation, 'number': states["a16"].number},
+        ]
+    }
 
     print("\nFinished. Total execution time: ", time.time() - start_time, " seconds")
 
@@ -76,7 +84,7 @@ def request_page():
 def word2vec(user_words: list[str]):
     start_time = time.time()
     print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://7bba-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
+    sim_list = requests.get('http://f946-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -144,6 +152,8 @@ class D3Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "d3"
+        self.orientation = "down"
+        self.number = 3
         self.word_length = 11
         self.next_state = "a8"
         self.clue = EMPTY_CLUE
@@ -164,6 +174,8 @@ class A8Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "a8"
+        self.orientation = "across"
+        self.number = 8
         self.word_length = 10
         self.next_state = "a12"
         self.backtrack_state = "d3"
@@ -191,6 +203,8 @@ class A12Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "a12"
+        self.orientation = "across"
+        self.number = 12
         self.word_length = 10
         self.next_state = "d2"
         self.backtrack_state = "d3"
@@ -214,6 +228,8 @@ class D2Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "d2"
+        self.orientation = "down"
+        self.number = 2
         self.word_length = 6
         self.next_state = "d5"
         self.backtrack_state = "a8"
@@ -237,6 +253,8 @@ class D5Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "d5"
+        self.orientation = "down"
+        self.number = 5
         self.word_length = 6
         self.next_state = "d10"
         self.backtrack_state = "a8"
@@ -260,6 +278,8 @@ class D10Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "d10"
+        self.orientation = "down"
+        self.number = 10
         self.word_length = 6
         self.next_state = "d11"
         self.backtrack_state = "a12"
@@ -283,6 +303,8 @@ class D11Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "d11"
+        self.orientation = "down"
+        self.number = 11
         self.word_length = 6
         self.next_state = "a7"
         self.backtrack_state = "a12"
@@ -306,6 +328,8 @@ class A7Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "a7"
+        self.orientation = "across"
+        self.number = 7
         self.word_length = 6
         self.next_state = "a15"
         self.backtrack_state = "d3"
@@ -330,6 +354,8 @@ class A15Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "a15"
+        self.orientation = "across"
+        self.number = 15
         self.word_length = 6
         self.next_state = "d1"
         self.backtrack_state = "d10"
@@ -354,6 +380,8 @@ class D1Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "d1"
+        self.orientation = "down"
+        self.number = 1
         self.word_length = 4
         self.next_state = "d4"
         self.backtrack_state = "a8"
@@ -377,6 +405,8 @@ class D4Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "d4"
+        self.orientation = "down"
+        self.number = 4
         self.word_length = 4
         self.next_state = "a6"
         self.backtrack_state = "a7"
@@ -401,6 +431,8 @@ class A6Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "a6"
+        self.orientation = "across"
+        self.number = 6
         self.word_length = 4
         self.next_state = "a9"
         self.backtrack_state = "d1"
@@ -425,6 +457,8 @@ class A9Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "a9"
+        self.orientation = "across"
+        self.number = 9
         self.word_length = 4
         self.next_state = "a11"
         self.backtrack_state = "d10"
@@ -449,6 +483,8 @@ class A11Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "a11"
+        self.orientation = "across"
+        self.number = 11
         self.word_length = 4
         self.next_state = "d13"
         self.backtrack_state = "d11"
@@ -473,6 +509,8 @@ class D13Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "d13"
+        self.orientation = "down"
+        self.number = 13
         self.word_length = 4
         self.next_state = "d14"
         self.backtrack_state = "a12"
@@ -497,6 +535,8 @@ class D14Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "d14"
+        self.orientation = "down"
+        self.number = 14
         self.word_length = 4
         self.next_state = "a16"
         self.backtrack_state = "a12"
@@ -520,6 +560,8 @@ class A16Insertion(WordInsertions):
         super().__init__()
         self.banned_words = []
         self.name = "a16"
+        self.orientation = "across"
+        self.number = 16
         self.word_length = 4
         self.next_state = ""
         self.backtrack_state = "d11"
@@ -720,6 +762,7 @@ def draw_grid():
     ]
 
     print(np.matrix(grid))
+    return grid
 
 
 def create_clues():
