@@ -76,19 +76,24 @@ def request_page():
         ]
     }
 
+    eleven_char_words.clear()
+    ten_char_words.clear()
+    six_char_words.clear()
+    four_char_words.clear()
+
     print("\nFinished. Total execution time: ", time.time() - start_time, " seconds")
 
     return result
 
 
-def word2vec(user_words: list[str]):
+def word2vec(user_words):
     start_time = time.time()
-    print(time.time() - start_time, "seconds: Retrieving sim_list")
-    sim_list = requests.get('http://95e3-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
+    print(time.time() - start_time, "seconds: Retrieving sim_list for words " + user_words)
+    sim_list = requests.get('http://ca19-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
 
     word_list = [i[0] for i in sim_list.json()]
 
-    print(time.time() - start_time, "seconds: sim_list successfully retrieved")
+    print(time.time() - start_time, "seconds: sim_list successfully retrieved for words " + user_words)
 
     dictionaries(word_list)
 
@@ -113,19 +118,19 @@ def dictionaries(word_list):
 
     print(time.time() - start_time, "seconds: Done")
 
-    # print("Eleven character words:")
+    # print("\nEleven character words:")
     # for word in eleven_char_words:
     #     print(word)
-
-    # print("Ten character words:")
+    #
+    # print("\nTen character words:")
     # for word in ten_char_words:
     #     print(word)
-
-    # print("Six character words:")
+    #
+    # print("\nSix character words:")
     # for word in six_char_words:
     #     print(word)
-
-    # print("Four character words:")
+    #
+    # print("\nFour character words:")
     # for word in four_char_words:
     #     print(word)
 
@@ -685,6 +690,11 @@ def backtrack_state(current_state):
 
 def execute():
     inserted_words.clear()
+    # eleven_char_words.clear()
+    # ten_char_words.clear()
+    # six_char_words.clear()
+    # four_char_words.clear()
+
     i = 0
     print(time.time() - start_time, "seconds: Beginning insertions...")
     while i < MAX_RUN_TIME:
