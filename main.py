@@ -88,7 +88,7 @@ def request_page():
 def word2vec(user_words):
     start_time = time.time()
     print(time.time() - start_time, "seconds: Retrieving sim_list for words " + user_words)
-    sim_list = requests.get('http://781d-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
+    sim_list = requests.get('http://ad43-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -160,7 +160,7 @@ class D3Insertion(WordInsertions):
 
     def is_valid(self, word):
         if word not in self.banned_words:
-            eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r'))
+            eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in eleven_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -185,7 +185,7 @@ class A8Insertion(WordInsertions):
         if word[4] == states[self.backtrack_state].word[3] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
+            ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in ten_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -210,7 +210,7 @@ class A12Insertion(WordInsertions):
         if word[5] == states[self.backtrack_state].word[7] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
+            ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in ten_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -235,7 +235,7 @@ class D2Insertion(WordInsertions):
         if word[3] == states[self.backtrack_state].word[2] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in six_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -260,7 +260,7 @@ class D5Insertion(WordInsertions):
         if word[3] == states[self.backtrack_state].word[8] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in six_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -285,7 +285,7 @@ class D10Insertion(WordInsertions):
         if word[2] == states[self.backtrack_state].word[1] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in six_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -310,7 +310,7 @@ class D11Insertion(WordInsertions):
         if word[2] == states[self.backtrack_state].word[7] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in six_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -336,7 +336,7 @@ class A7Insertion(WordInsertions):
                 word[4] == states["d5"].word[1] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in six_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -362,7 +362,7 @@ class A15Insertion(WordInsertions):
                 word[5] == states["d3"].word[9] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+            six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in six_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -387,7 +387,7 @@ class D1Insertion(WordInsertions):
         if word[3] == states[self.backtrack_state].word[0] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in four_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -413,7 +413,7 @@ class D4Insertion(WordInsertions):
                 word[3] == states["a8"].word[6] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in four_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -439,7 +439,7 @@ class A6Insertion(WordInsertions):
                 word[3] == states["d2"].word[1] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in four_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -465,7 +465,7 @@ class A9Insertion(WordInsertions):
                 word[3] == states["d2"].word[5] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in four_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -491,7 +491,7 @@ class A11Insertion(WordInsertions):
                 word[2] == states["d5"].word[5] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in four_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -517,7 +517,7 @@ class D13Insertion(WordInsertions):
                 word[2] == states["a15"].word[3] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in four_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -542,7 +542,7 @@ class D14Insertion(WordInsertions):
         if word[0] == states[self.backtrack_state].word[9] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in four_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -568,7 +568,7 @@ class A16Insertion(WordInsertions):
                 word[2] == states["d14"].word[2] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+            four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r', encoding="utf8"))
             for row in four_char_nytcrosswords:
                 if word == row["Word"]:
                     self.set_word(word)
@@ -761,19 +761,19 @@ def draw_grid():
 def create_clues():
     # 1. CSV File Clues
     print(time.time() - start_time, "seconds: Begininng CSV clues")
-    eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r'))
+    eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r', encoding="utf8"))
     for row in eleven_char_nytcrosswords:
         if states["d3"].word == row["Word"]:
             states["d3"].clue = row["Clue"]
 
-    ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
+    ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r', encoding="utf8"))
     for row in ten_char_nytcrosswords:
         if states["a8"].word == row["Word"]:
             states["a8"].clue = row["Clue"]
         if states["a12"].word == row["Word"]:
             states["a12"].clue = row["Clue"]
 
-    six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r'))
+    six_char_nytcrosswords = csv.DictReader(open("six_char_nytcrosswords.csv", 'r', encoding="utf8"))
     for row in six_char_nytcrosswords:
         if states["d2"].word == row["Word"]:
             states["d2"].clue = row["Clue"]
@@ -788,7 +788,7 @@ def create_clues():
         if states["a15"].word == row["Word"]:
             states["a15"].clue = row["Clue"]
 
-    four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r'))
+    four_char_nytcrosswords = csv.DictReader(open("four_char_nytcrosswords.csv", 'r', encoding="utf8"))
     for row in four_char_nytcrosswords:
         if states["d1"].word == row["Word"]:
             states["d1"].clue = row["Clue"]
