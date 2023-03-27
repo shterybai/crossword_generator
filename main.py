@@ -685,7 +685,7 @@ def execute():
     i = 0
     attempt = 0
     print(time.time() - start_time, "seconds: Beginning insertions...")
-    while attempt < MAX_RUN_TIME:
+    while i < MAX_RUN_TIME:
         if i >= len(cargo):
             print(time.time() - start_time, "seconds: End of cargo reached")
             break
@@ -699,7 +699,7 @@ def execute():
                 print(time.time() - start_time, "seconds: Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
                 state.word = word
                 inserted_words.append(word)
-                i += 1
+                # i += 1
                 break
 
         if state.word == EMPTY_WORD:
@@ -715,7 +715,7 @@ def execute():
             print(time.time() - start_time, "seconds: No valid words remaining for " + current_state + "; crossword construction failed")
             break
 
-        attempt += 1
+        i += 1
 
 
 def print_words():
