@@ -21,7 +21,6 @@ grid_length = 11
 
 # Grid creation
 # black_square = "#"
-# white_square = "-"
 # grid = [
 #     [black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square, white_square, black_square],
 #     [white_square, white_square, white_square, white_square, black_square, white_square, white_square, white_square, white_square, white_square, white_square],
@@ -89,7 +88,7 @@ def request_page():
 def word2vec(user_words):
     start_time = time.time()
     print(time.time() - start_time, "seconds: Retrieving sim_list for words " + user_words)
-    sim_list = requests.get('http://ca19-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
+    sim_list = requests.get('http://781d-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
 
     word_list = [i[0] for i in sim_list.json()]
 
@@ -104,16 +103,12 @@ def dictionaries(word_list):
 
     for word in word_list:
         if len(word) == 11 and all(c not in BANNED_CHARACTERS for c in word):
-            # print(time.time() - start_time, "seconds: Adding " + word + " to the list")
             eleven_char_words.append(word.upper())
         if len(word) == 10 and all(c not in BANNED_CHARACTERS for c in word):
-            # print(time.time() - start_time, "seconds: Adding " + word + " to the list")
             ten_char_words.append(word.upper())
         if len(word) == 6 and all(c not in BANNED_CHARACTERS for c in word):
-            # print(time.time() - start_time, "seconds: Adding " + word + " to the list")
             six_char_words.append(word.upper())
         if len(word) == 4 and all(c not in BANNED_CHARACTERS for c in word):
-            # print(time.time() - start_time, "seconds: Adding " + word + " to the list")
             four_char_words.append(word.upper())
 
     print(time.time() - start_time, "seconds: Done")
@@ -187,16 +182,12 @@ class A8Insertion(WordInsertions):
         self.clue = EMPTY_CLUE
 
     def is_valid(self, word):
-        # print(time.time() - start_time, "seconds: Searching for " + word)
         if word[4] == states[self.backtrack_state].word[3] and \
                 word not in inserted_words and \
                 word not in self.banned_words:
-            # print("Initial check for a8 passed; checking for loop...")
             ten_char_nytcrosswords = csv.DictReader(open("ten_char_nytcrosswords.csv", 'r'))
             for row in ten_char_nytcrosswords:
-                # print(time.time() - start_time, "seconds: Checking if " + word + " is the same as " + row["Word"])
                 if word == row["Word"]:
-                    # print(time.time() - start_time, "seconds: Match found; adding...")
                     self.set_word(word)
                     return True
         return False
@@ -690,14 +681,11 @@ def backtrack_state(current_state):
 
 def execute():
     inserted_words.clear()
-    # eleven_char_words.clear()
-    # ten_char_words.clear()
-    # six_char_words.clear()
-    # four_char_words.clear()
 
     i = 0
+    attempt = 0
     print(time.time() - start_time, "seconds: Beginning insertions...")
-    while i < MAX_RUN_TIME:
+    while attempt < MAX_RUN_TIME:
         if i >= len(cargo):
             print(time.time() - start_time, "seconds: End of cargo reached")
             break
@@ -711,7 +699,7 @@ def execute():
                 print(time.time() - start_time, "seconds: Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
                 state.word = word
                 inserted_words.append(word)
-                # i += 1
+                i += 1
                 break
 
         if state.word == EMPTY_WORD:
@@ -727,11 +715,7 @@ def execute():
             print(time.time() - start_time, "seconds: No valid words remaining for " + current_state + "; crossword construction failed")
             break
 
-        i += 1
-
-    # draw_grid()
-
-    # create_clues()
+        attempt += 1
 
 
 def print_words():
@@ -756,7 +740,6 @@ def print_words():
 
 def draw_grid():
     black_square = "#"
-    white_square = "-"
     grid = [
         [black_square, states["d1"].word[0], black_square, states["d2"].word[0], black_square, states["d3"].word[0], black_square, states["d4"].word[0], black_square, states["d5"].word[0], black_square],
         [states["a6"].word[0], states["d1"].word[1], states["a6"].word[2], states["d2"].word[1], black_square, states["d3"].word[1], states["a7"].word[1], states["a7"].word[2], states["a7"].word[3], states["d5"].word[1], states["a7"].word[5]],
@@ -776,9 +759,6 @@ def draw_grid():
 
 
 def create_clues():
-    # a6_clue = a7_clue = a8_clue = a9_clue = a11_clue = a12_clue = a15_clue = a16_clue = EMPTY_CLUE
-    # d1_clue = d2_clue = d3_clue = d4_clue = d5_clue = d10_clue = d11_clue = d13_clue = d14_clue = EMPTY_CLUE
-
     # 1. CSV File Clues
     print(time.time() - start_time, "seconds: Begininng CSV clues")
     eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r'))
