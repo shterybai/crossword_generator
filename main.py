@@ -1,6 +1,5 @@
 import requests
 import time
-import numpy as np
 import csv
 from flask import Flask, request
 
@@ -754,7 +753,7 @@ def draw_grid():
         [black_square, states["d10"].word[5], black_square, states["d13"].word[3], black_square, states["d3"].word[10], black_square, states["d11"].word[5], black_square, states["d14"].word[3], black_square]
     ]
 
-    print(np.matrix(grid))
+    # print(np.matrix(grid))
     return grid
 
 

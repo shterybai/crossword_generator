@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89b22cfc-fe5e-4034-8e80-a05e7d3e09b2" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eleven_char_nytcrosswords.csv" beforeDir="false" afterPath="$PROJECT_DIR$/eleven_char_nytcrosswords.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/four_char_nytcrosswords.csv" beforeDir="false" afterPath="$PROJECT_DIR$/four_char_nytcrosswords.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/six_char_nytcrosswords.csv" beforeDir="false" afterPath="$PROJECT_DIR$/six_char_nytcrosswords.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ten_char_nytcrosswords.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ten_char_nytcrosswords.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,6 +91,9 @@
       <updated>1668635087808</updated>
       <workItem from="1678191504216" duration="13625000" />
       <workItem from="1678289648297" duration="14347000" />
+      <workItem from="1680089350954" duration="2490000" />
+      <workItem from="1680223981867" duration="80000" />
+      <workItem from="1680224175822" duration="599000" />
     </task>
     <servers />
   </component>
