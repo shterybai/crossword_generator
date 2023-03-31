@@ -3,6 +3,8 @@ import time
 import numpy as np
 import csv
 from flask import Flask, request
+import logging
+import csv
 
 BANNED_CHARACTERS = "\"!@#$%^&.`*()-+?_=,<>/123456789\'"
 EMPTY_WORD = "___________"
@@ -18,6 +20,8 @@ six_char_words = []
 four_char_words = []
 
 grid_length = 11
+
+word_model_return = 50000
 
 # Grid creation
 # black_square = "#"
@@ -37,11 +41,11 @@ grid_length = 11
 
 app = Flask(__name__)
 # start_time = time.time()
-start_time = 0
 
 
 @app.route('/request', methods=['GET', 'POST'])
 def request_page():
+    start_time = time.time()
     user_words = str(request.args.get('user_words'))
     word2vec(user_words)
 
@@ -80,26 +84,32 @@ def request_page():
     six_char_words.clear()
     four_char_words.clear()
 
-    print("\nFinished. Total execution time: ", time.time() - start_time, " seconds")
+    execution_time = time.time() - start_time
+
+    print("\nFinished. Total execution time: ", execution_time, " seconds")
+
+    # with open('time_data.csv', 'a', newline='') as time_file:
+    #     time_writer = csv.writer(time_file)
+    #     time_writer.writerow([word_model_return, execution_time])
+    #     time_file.flush()
 
     return result
 
 
 def word2vec(user_words):
-    start_time = time.time()
-    print(time.time() - start_time, "seconds: Retrieving sim_list for words " + user_words)
-    sim_list = requests.get('http://ad43-109-255-231-194.ngrok.io/request/?user_words=' + user_words)
+    # print(time.time() - start_time, "seconds: Retrieving sim_list for words " + user_words)
+    sim_list = requests.get('http://127.0.0.1:7777/request/?user_words=' + user_words)
 
     word_list = [i[0] for i in sim_list.json()]
 
-    print(time.time() - start_time, "seconds: sim_list successfully retrieved for words " + user_words)
+    # print(time.time() - start_time, "seconds: sim_list successfully retrieved for words " + user_words)
 
     dictionaries(word_list)
 
 
 def dictionaries(word_list):
     # Populate word lists
-    print(time.time() - start_time, "seconds: Populating word lists...")
+    # print(time.time() - start_time, "seconds: Populating word lists...")
 
     for word in word_list:
         if len(word) == 11 and all(c not in BANNED_CHARACTERS for c in word):
@@ -111,7 +121,7 @@ def dictionaries(word_list):
         if len(word) == 4 and all(c not in BANNED_CHARACTERS for c in word):
             four_char_words.append(word.upper())
 
-    print(time.time() - start_time, "seconds: Done")
+    # print(time.time() - start_time, "seconds: Done")
 
     # print("\nEleven character words:")
     # for word in eleven_char_words:
@@ -683,11 +693,18 @@ def execute():
     inserted_words.clear()
 
     i = 0
-    attempt = 0
-    print(time.time() - start_time, "seconds: Beginning insertions...")
+    backtracks = 0
+    # print(time.time() - start_time, "seconds: Beginning insertions...")
     while i < MAX_RUN_TIME:
         if i >= len(cargo):
-            print(time.time() - start_time, "seconds: End of cargo reached")
+            # print(time.time() - start_time, "seconds: End of cargo reached")
+
+
+            with open('success_failure_data.csv', 'a', newline='') as success_failure_file:
+                success_failure_writer = csv.writer(success_failure_file)
+                success_failure_writer.writerow([word_model_return, "Success"])
+                success_failure_file.flush()
+
             break
 
         current_state = cargo[i]
@@ -696,7 +713,7 @@ def execute():
 
         for word in word_list:
             if state.is_valid(word):
-                print(time.time() - start_time, "seconds: Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
+                # print(time.time() - start_time, "seconds: Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
                 state.word = word
                 inserted_words.append(word)
                 # i += 1
@@ -707,15 +724,27 @@ def execute():
             i = cargo.index(n_state)
             states[n_state].ban_current_word()
             inserted_words.remove(states[n_state].word)
-            print(time.time() - start_time, "seconds: Insertion for " + current_state + " failed: backtracking to " + cargo[i])
+            # print(time.time() - start_time, "seconds: Insertion for " + current_state + " failed: backtracking to " + cargo[i])
+            backtracks += 1
             print_words()
             continue
 
         if state.word in state.banned_words:
-            print(time.time() - start_time, "seconds: No valid words remaining for " + current_state + "; crossword construction failed")
+            # print(time.time() - start_time, "seconds: No valid words remaining for " + current_state + "; crossword construction failed")
+
+            with open('success_failure_data.csv', 'a', newline='') as success_failure_file:
+                success_failure_writer = csv.writer(success_failure_file)
+                success_failure_writer.writerow([word_model_return, "Failure"])
+                success_failure_file.flush()
+
             break
 
         i += 1
+
+    with open('backtrack_data.csv', 'a', newline='') as backtrack_file:
+        backtrack_writer = csv.writer(backtrack_file)
+        backtrack_writer.writerow([word_model_return, backtracks])
+        backtrack_file.flush()
 
 
 def print_words():
@@ -760,7 +789,7 @@ def draw_grid():
 
 def create_clues():
     # 1. CSV File Clues
-    print(time.time() - start_time, "seconds: Begininng CSV clues")
+    # print(time.time() - start_time, "seconds: Begininng CSV clues")
     eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r', encoding="utf8"))
     for row in eleven_char_nytcrosswords:
         if states["d3"].word == row["Word"]:
@@ -806,7 +835,7 @@ def create_clues():
             states["d14"].clue = row["Clue"]
         if states["a16"].word == row["Word"]:
             states["a16"].clue = row["Clue"]
-    print(time.time() - start_time, "seconds: Finished CSV clues")
+    # print(time.time() - start_time, "seconds: Finished CSV clues")
 
     print("\nAcross Clues:")
     print("6: " + str(states["a6"].clue) + ": " + states["a6"].word)
