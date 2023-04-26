@@ -6,10 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="89b22cfc-fe5e-4034-8e80-a05e7d3e09b2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backtrack_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backtrack_data.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eleven_char_nytcrosswords.csv" beforeDir="false" afterPath="$PROJECT_DIR$/eleven_char_nytcrosswords.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/four_char_nytcrosswords.csv" beforeDir="false" afterPath="$PROJECT_DIR$/four_char_nytcrosswords.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/six_char_nytcrosswords.csv" beforeDir="false" afterPath="$PROJECT_DIR$/six_char_nytcrosswords.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/success_failure_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/success_failure_data.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ten_char_nytcrosswords.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ten_char_nytcrosswords.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

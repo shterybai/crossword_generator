@@ -46,6 +46,9 @@ app = Flask(__name__)
 @app.route('/request', methods=['GET', 'POST'])
 def request_page():
     start_time = time.time()
+
+    reset_states()
+
     user_words = str(request.args.get('user_words'))
     word2vec(user_words)
 
@@ -83,6 +86,7 @@ def request_page():
     ten_char_words.clear()
     six_char_words.clear()
     four_char_words.clear()
+    inserted_words.clear()
 
     execution_time = time.time() - start_time
 
@@ -96,20 +100,43 @@ def request_page():
     return result
 
 
+def reset_states():
+    global states
+    states = {
+        "d3": D3Insertion(),
+        "a8": A8Insertion(),
+        "a12": A12Insertion(),
+        "d2": D2Insertion(),
+        "d5": D5Insertion(),
+        "d10": D10Insertion(),
+        "d11": D11Insertion(),
+        "a7": A7Insertion(),
+        "a15": A15Insertion(),
+        "d1": D1Insertion(),
+        "d4": D4Insertion(),
+        "a6": A6Insertion(),
+        "a9": A9Insertion(),
+        "a11": A11Insertion(),
+        "d13": D13Insertion(),
+        "d14": D14Insertion(),
+        "a16": A16Insertion()
+    }
+
+
 def word2vec(user_words):
-    # print(time.time() - start_time, "seconds: Retrieving sim_list for words " + user_words)
+    print("Retrieving sim_list for words " + user_words)
     sim_list = requests.get('http://127.0.0.1:7777/request/?user_words=' + user_words)
 
     word_list = [i[0] for i in sim_list.json()]
 
-    # print(time.time() - start_time, "seconds: sim_list successfully retrieved for words " + user_words)
+    print("sim_list successfully retrieved for words " + user_words)
 
     dictionaries(word_list)
 
 
 def dictionaries(word_list):
     # Populate word lists
-    # print(time.time() - start_time, "seconds: Populating word lists...")
+    print("Populating word lists...")
 
     for word in word_list:
         if len(word) == 11 and all(c not in BANNED_CHARACTERS for c in word):
@@ -121,7 +148,7 @@ def dictionaries(word_list):
         if len(word) == 4 and all(c not in BANNED_CHARACTERS for c in word):
             four_char_words.append(word.upper())
 
-    # print(time.time() - start_time, "seconds: Done")
+    print("Done")
 
     # print("\nEleven character words:")
     # for word in eleven_char_words:
@@ -694,10 +721,10 @@ def execute():
 
     i = 0
     backtracks = 0
-    # print(time.time() - start_time, "seconds: Beginning insertions...")
+    print("Beginning insertions...")
     while i < MAX_RUN_TIME:
         if i >= len(cargo):
-            # print(time.time() - start_time, "seconds: End of cargo reached")
+            print("End of cargo reached")
 
 
             with open('success_failure_data.csv', 'a', newline='') as success_failure_file:
@@ -711,9 +738,11 @@ def execute():
         state = states[current_state]
         word_list = wordlists[state.word_length]
 
+        state.word = EMPTY_WORD
+
         for word in word_list:
             if state.is_valid(word):
-                # print(time.time() - start_time, "seconds: Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
+                print("Insert Success: inserting the word " + "\"" + state.word + "\"" + " into " + current_state)
                 state.word = word
                 inserted_words.append(word)
                 # i += 1
@@ -724,13 +753,13 @@ def execute():
             i = cargo.index(n_state)
             states[n_state].ban_current_word()
             inserted_words.remove(states[n_state].word)
-            # print(time.time() - start_time, "seconds: Insertion for " + current_state + " failed: backtracking to " + cargo[i])
+            print("Insertion for " + current_state + " failed: backtracking to " + cargo[i])
             backtracks += 1
             print_words()
             continue
 
         if state.word in state.banned_words:
-            # print(time.time() - start_time, "seconds: No valid words remaining for " + current_state + "; crossword construction failed")
+            print("No valid words remaining for " + current_state + "; crossword construction failed")
 
             with open('success_failure_data.csv', 'a', newline='') as success_failure_file:
                 success_failure_writer = csv.writer(success_failure_file)
@@ -789,7 +818,7 @@ def draw_grid():
 
 def create_clues():
     # 1. CSV File Clues
-    # print(time.time() - start_time, "seconds: Begininng CSV clues")
+    print("Begininng CSV clues")
     eleven_char_nytcrosswords = csv.DictReader(open("eleven_char_nytcrosswords.csv", 'r', encoding="utf8"))
     for row in eleven_char_nytcrosswords:
         if states["d3"].word == row["Word"]:
@@ -835,7 +864,7 @@ def create_clues():
             states["d14"].clue = row["Clue"]
         if states["a16"].word == row["Word"]:
             states["a16"].clue = row["Clue"]
-    # print(time.time() - start_time, "seconds: Finished CSV clues")
+    print("Finished CSV clues")
 
     print("\nAcross Clues:")
     print("6: " + str(states["a6"].clue) + ": " + states["a6"].word)
