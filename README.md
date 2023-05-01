@@ -9,3 +9,6 @@ This project uses the machine learning algorithm "Gensim" and its subsidiary "Wo
 This is the main repository of the project, with the other two repositiories being:
  - https://github.com/shterybai/crossword_generator_website
  - https://github.com/shterybai/CrosswordAPI
+
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />
